@@ -1,8 +1,14 @@
-import { GetFactoryStat } from "@/actions/getFactoryStat";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GetAllFactoriesStat, GetAllFactories } from "@/actions/factory";
+import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
 import { EyeIcon } from "@heroicons/react/24/outline";
+import CreateFactoryBtn from "@/components/createFactoryBtn";
+import { ReceiptFactory } from "@prisma/client";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { formatDistance } from "date-fns";
+
 
 export default function Home() {
   return(
@@ -10,18 +16,27 @@ export default function Home() {
       <Suspense fallback={<StatsBoard loading={true}/>}>
         <StatsBoardWrapper/>
       </Suspense>
+      <div>
+        <h2>Your Factories</h2>
+        <CreateFactoryBtn/>
+      </div>
+      <div>
+        <Suspense fallback={<FactoryList loading={true}/>}>
+          <FactoryList/>
+        </Suspense>
+      </div>
     </div>
   );
 }
 
 async function StatsBoardWrapper(){
-  const stat = await GetFactoryStat();
+  const stat = await GetAllFactoriesStat();
 
   return <StatsBoard loading={false} data={stat} />
 }
 
 interface StatsBoardProps {
-  data?: Awaited<ReturnType<typeof GetFactoryStat>>;
+  data?: Awaited<ReturnType<typeof GetAllFactoriesStat>>;
   loading: boolean;
 }
 

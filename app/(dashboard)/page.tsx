@@ -21,7 +21,7 @@ export default function Home() {
         <CreateFactoryBtn/>
       </div>
       <div>
-        <Suspense fallback={<FactoryList loading={true}/>}>
+        <Suspense fallback={<FactoryList/>}>
           <FactoryList/>
         </Suspense>
       </div>
@@ -44,12 +44,12 @@ function StatsBoard(props: StatsBoardProps){
   const { data, loading } = props;
 
   return (
-    <div>
+    <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       <StatsCard
         title="Total Visits"
         value={data?.visits.toLocaleString() || ""}
         icon={<EyeIcon className="h-7 w-7"/>}
-        helperText="All time receipt factory visits"
+        helperText="All time receipts factory visits"
         loading={loading}
         className=""
       />
@@ -105,6 +105,68 @@ function StatsCard(
         </div>
         <p className="">{helperText}</p>
       </CardContent>
+    </Card>
+  )
+}
+
+function FactoryListSkeleton(){
+  return <Skeleton/>
+}
+
+async function FactoryList(){
+  const factoryList = await GetAllFactories();
+  return(
+    <>
+      {factoryList.map((factory) => {
+        <FactoryCard key={factory.id} factory={factory}/>
+      })}
+    </>
+  )
+
+}
+
+function FactoryCard({factory}: {factory: ReceiptFactory}){
+  return(
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 justify-between">
+          <span className="truncate font-bold">{factory.name}</span>
+          {factory.published && <span>Published (Badge)</span>}
+          {!factory.published && <span>Draft (Badge)</span>}
+        </CardTitle>
+        <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
+          {formatDistance(factory.createdAt, new Date(), {
+            addSuffix: true,
+          })}
+          {factory.published && (
+            <span className="flex items-center gap-2">
+              <span>icon</span>
+              <span>{factory.visits.toLocaleString()}</span>
+              <span>icon</span>
+              <span>{factory.prints.toLocaleString()}</span>
+            </span>
+          )}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="h-[20px] truncate text-sm text-muted-foreground">
+        {factory.description || "No description"}
+      </CardContent>
+      <CardFooter>
+        {factory.published && (
+          <Button asChild className="w-full mt-2 text-md gap-4">
+            <Link href={`/factories/${factory.id}`}>
+              View submissions <span>icon</span>
+            </Link>
+          </Button>
+        )}
+        {!factory.published && (
+          <Button asChild variant={"secondary"} className="w-full mt-2 text-md gap-4">
+            <Link href={`/makereceipt/${factory.id}`}>
+              Edit factory <span>icon</span>
+            </Link>
+          </Button>
+        )}
+      </CardFooter>
     </Card>
   )
 }

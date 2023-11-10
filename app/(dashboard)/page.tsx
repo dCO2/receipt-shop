@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription }
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import CreateFactoryBtn from "@/components/createFactoryBtn";
+import CreateFactoryBtn from "@/components/CreateFactoryBtn";
 import { ReceiptFactory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -21,9 +21,10 @@ export default function Home() {
         <CreateFactoryBtn/>
       </div>
       <div>
-        <Suspense fallback={<FactoryList/>}>
+        <FactoryList/>
+        {/* <Suspense fallback={<FactoryList/>}>
           <FactoryList/>
-        </Suspense>
+        </Suspense> */}
       </div>
     </div>
   );
@@ -117,12 +118,11 @@ async function FactoryList(){
   const factoryList = await GetAllFactories();
   return(
     <>
-      {factoryList.map((factory) => {
+      {factoryList.map((factory) => (
         <FactoryCard key={factory.id} factory={factory}/>
-      })}
+      ))}
     </>
-  )
-
+  );
 }
 
 function FactoryCard({factory}: {factory: ReceiptFactory}){
@@ -154,14 +154,14 @@ function FactoryCard({factory}: {factory: ReceiptFactory}){
       <CardFooter>
         {factory.published && (
           <Button asChild className="w-full mt-2 text-md gap-4">
-            <Link href={`/factories/${factory.id}`}>
+            <Link href={`/factory/${factory.id}`}>
               View submissions <span>icon</span>
             </Link>
           </Button>
         )}
         {!factory.published && (
           <Button asChild variant={"secondary"} className="w-full mt-2 text-md gap-4">
-            <Link href={`/makereceipt/${factory.id}`}>
+            <Link href={`/editfactory/${factory.id}`}>
               Edit factory <span>icon</span>
             </Link>
           </Button>

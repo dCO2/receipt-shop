@@ -84,3 +84,19 @@ export async function GetAllFactories(){
     }
   })
 }
+
+export async function GetFactoryById(id: number){
+  const user = await currentUser();
+
+  if(!user){
+    throw new UserNotFoundErr();
+  }
+
+  return await prisma.receiptFactory.findUnique({
+    where: {
+      userId: user.id,
+      id,
+    },
+  });
+
+}

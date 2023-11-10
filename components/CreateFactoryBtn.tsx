@@ -13,6 +13,7 @@ import { Textarea } from './ui/textarea';
 import { CreateFactory } from '@/actions/factory';
 
 import React from 'react';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 const factorySchema = z.object({
   name: z.string().min(4),

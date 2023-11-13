@@ -4,33 +4,36 @@ import { ReceiptFactory } from "@prisma/client";
 import PreviewFactoryBtn from "./PreviewFactoryBtn";
 import SaveFactoryBtn from "./SaveFactoryBtn";
 import PublishFactoryBtn from "./PublishFactoryBtn";
-import EditorPane from "./EditorPane";
+import EditorArea from "./EditorArea";
+import { DndContext } from "@dnd-kit/core";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
 
   return(
-    <main>
-      <nav>
-        <div>
-          <h2>
-            <span>Factory:</span>
-            {factory.name}
-          </h2>
+    <DndContext>
+      <main>
+        <nav>
           <div>
-            <PreviewFactoryBtn/>
-            {!factory.published && (
-              <>
-                <SaveFactoryBtn />
-                <PublishFactoryBtn/>
-              </>
-            )}
+            <h2>
+              <span>Factory:</span>
+              {factory.name}
+            </h2>
+            <div>
+              <PreviewFactoryBtn/>
+              {!factory.published && (
+                <>
+                  <SaveFactoryBtn />
+                  <PublishFactoryBtn/>
+                </>
+              )}
+            </div>
           </div>
+        </nav>
+        <div>
+          <EditorArea/>
         </div>
-      </nav>
-      <div>
-        <EditorPane/>
-      </div>
-    </main>
+      </main>
+    </DndContext>
   );
 }
 

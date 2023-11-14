@@ -6,6 +6,7 @@ import SaveFactoryBtn from "./SaveFactoryBtn";
 import PublishFactoryBtn from "./PublishFactoryBtn";
 import EditorArea from "./EditorArea";
 import { DndContext } from "@dnd-kit/core";
+import DragOverlayWrapper from "./DragOverlayWrapper";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
 
@@ -33,6 +34,7 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
           <EditorArea/>
         </div>
       </main>
+      <DragOverlayWrapper/>
     </DndContext>
   );
 }

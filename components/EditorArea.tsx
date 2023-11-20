@@ -72,7 +72,7 @@ function EditorArea() {
 function EditorElementWrapper({element}: {element: FactoryElementInstance}){
   const EditorElement = FactoryElements[element.type].editorComponent;
 
-  return <EditorElement/>;
+  return <EditorElement elementInstance={element}/>;
 }
 
 export default EditorArea

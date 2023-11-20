@@ -13,7 +13,9 @@ export type FactoryElements = {
     label: string;
   }
 
-  editorComponent: React.FC;
+  editorComponent: React.FC<{
+    elementInstance: FactoryElementInstance;
+  }>;
   factoryComponent: React.FC;
   propertiesComponent: React.FC;
 

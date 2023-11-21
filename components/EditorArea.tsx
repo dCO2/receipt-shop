@@ -70,9 +70,36 @@ function EditorArea() {
 }
 
 function EditorElementWrapper({element}: {element: FactoryElementInstance}){
+
+  const topHalf = useDroppable({
+    id: element.id + "-top",
+    data: {
+      type: element.type,
+      elementId: element.id,
+      isTopHalfEditorAreaElement: true,
+    },
+  });
+
+  const bottomHalf = useDroppable({
+    id: element.id + "-bottom",
+    data: {
+      type: element.type,
+      elementId: element.id,
+      isBottomHalfEditorAreaElement: true,
+    },
+  });
+
   const EditorElement = FactoryElements[element.type].editorComponent;
 
-  return <EditorElement elementInstance={element}/>;
+  return (
+    <div className="relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset">
+      <div ref={topHalf.setNodeRef} className="absolute bg-green-500 w-full h-1/2 rounded-t-md"/>
+      <div ref={bottomHalf.setNodeRef} className="absolute bg-red-500 w-full bottom-0 h-1/2 rounded-b-md"/>
+      <div className="flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none">
+        <EditorElement elementInstance={element}/>  
+      </div>
+    </div>
+  );
 }
 
 export default EditorArea

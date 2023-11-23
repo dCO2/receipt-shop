@@ -28,12 +28,22 @@ export const TextEntryFactoryElement: FactoryElements = {
   },
   editorComponent: EditorComponent,
   factoryComponent: () => <div>Factory Component</div>,
-  propertiesComponent: () => <div>Properties Component</div>,
+  propertiesComponent: PropertiesComponent,
 };
 
 type CustomInstance = FactoryElementInstance & {
   extraAttributes: typeof extraAttributes;
 };
+
+function PropertiesComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+  const element = elementInstance as CustomInstance;
+
+  return(
+    <div>
+      Factory Properties for {element?.extraAttributes?.label}
+    </div>
+  );
+}
 
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;

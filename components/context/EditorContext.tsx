@@ -13,6 +13,8 @@ type EditorContextType = {
   // focused element is the element being edited
   focusedElement: FactoryElementInstance | null;
   setFocusedElement: Dispatch<SetStateAction<FactoryElementInstance | null>>;
+
+  updateElement: (id: string, element: FactoryElementInstance) => void;
 }
 
 export const EditorContext = createContext<EditorContextType | null>(null);
@@ -33,6 +35,15 @@ export default function EditorContextProvider({children} : {children: ReactNode;
 
   const removeElement = () => {};
 
+  const updateElement = (id: string, element: FactoryElementInstance) => {
+    setElements(prev => {
+      const newElements = [...prev];
+      const index = newElements.findIndex(el => el.id === id);
+      newElements[index] = element;
+      return newElements;
+    })
+  };
+
   return(
     <EditorContext.Provider
       value={{
@@ -41,6 +52,8 @@ export default function EditorContextProvider({children} : {children: ReactNode;
         addElement,
         removeElement,
         setFocusedElement,
+
+        updateElement,
       }}
     >
       {children}

@@ -7,8 +7,16 @@ import PublishFactoryBtn from "./PublishFactoryBtn";
 import EditorArea from "./EditorArea";
 import { DndContext } from "@dnd-kit/core";
 import DragOverlayWrapper from "./DragOverlayWrapper";
+import { useEffect } from "react";
+import useEditor from "./hooks/useEditor";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
+  const {setElements} = useEditor();
+
+  useEffect(() => {
+    const elements = JSON.parse(factory.content);
+    setElements(elements);
+  }, [factory, setElements]);
 
   return(
     <DndContext>

@@ -9,6 +9,8 @@ type EditorContextType = {
   elements: FactoryElementInstance[];
   addElement: (index: number, element: FactoryElementInstance) => void;
   removeElement: (id: string) => void;
+  // re-add elements to the editor area once the page is saved / refreshed
+  setElements: Dispatch<SetStateAction<FactoryElementInstance[]>>;
 
   // focused element is the element being edited
   focusedElement: FactoryElementInstance | null;
@@ -52,6 +54,7 @@ export default function EditorContextProvider({children} : {children: ReactNode;
         addElement,
         removeElement,
         updateElement,
+        setElements,
 
         setFocusedElement,
       }}

@@ -32,7 +32,7 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
               {!factory.published && (
                 <>
                   <SaveFactoryBtn id={factory.id} />
-                  <PublishFactoryBtn/>
+                  <PublishFactoryBtn id={factory.id}/>
                 </>
               )}
             </div>

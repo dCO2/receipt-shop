@@ -26,7 +26,7 @@ function SaveFactoryBtn({id}: {id: number}) {
     }
   }
   return (
-    <Button variant={"outline"} disabled={loading} onClick={() => {startTransition(updateFactoryContent);}}>
+    <Button variant={"outline"} disabled={loading} onClick={() => {startTransition(updateFactoryContent);}} className="gap-2">
       <span>+</span>
       Save
       {loading && <span>spinnin</span>}

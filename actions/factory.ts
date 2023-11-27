@@ -118,3 +118,20 @@ export async function UpdateFactoryContent(id: number, jsonContent: string){
     }
   })
 }
+
+export async function PublishFactory(id: number) {
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await prisma.receiptFactory.update({
+    data: {
+      published: true,
+    },
+    where: {
+      userId: user.id,
+      id,
+    },
+  });
+}

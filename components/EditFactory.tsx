@@ -23,7 +23,7 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
               <PreviewFactoryBtn/>
               {!factory.published && (
                 <>
-                  <SaveFactoryBtn />
+                  <SaveFactoryBtn id={factory.id} />
                   <PublishFactoryBtn/>
                 </>
               )}

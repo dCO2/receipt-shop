@@ -100,3 +100,21 @@ export async function GetFactoryById(id: number){
   });
 
 }
+
+export async function UpdateFactoryContent(id: number, jsonContent: string){
+  const user = await currentUser();
+
+  if(!user){
+    throw new UserNotFoundErr();
+  }
+
+  return await prisma.receiptFactory.update({
+    where: {
+      userId: user.id,
+      id,
+    },
+    data: {
+      content: jsonContent
+    }
+  })
+}

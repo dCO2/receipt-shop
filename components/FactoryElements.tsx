@@ -16,7 +16,9 @@ export type FactoryElements = {
   editorComponent: React.FC<{
     elementInstance: FactoryElementInstance;
   }>;
-  factoryComponent: React.FC;
+  factoryComponent: React.FC<{
+    elementInstance: FactoryElementInstance;
+  }>;
   propertiesComponent: React.FC<{
     elementInstance: FactoryElementInstance;
   }>;

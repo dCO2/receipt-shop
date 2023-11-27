@@ -51,9 +51,9 @@ export default function EditorContextProvider({children} : {children: ReactNode;
         focusedElement,
         addElement,
         removeElement,
-        setFocusedElement,
-
         updateElement,
+
+        setFocusedElement,
       }}
     >
       {children}

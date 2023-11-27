@@ -41,7 +41,7 @@ export const TextEntryFactoryElement: FactoryElements = {
     label: "Text Entry"
   },
   editorComponent: EditorComponent,
-  factoryComponent: () => <div>Factory Component</div>,
+  factoryComponent: factoryComponent,
   propertiesComponent: PropertiesComponent,
 };
 
@@ -50,6 +50,21 @@ type CustomInstance = FactoryElementInstance & {
 };
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
+
+function factoryComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+  const element = elementInstance as CustomInstance;
+  const { label, required, placeHolder, helperText } = element.extraAttributes;
+  return (
+    <div>
+      <Label>
+        {label}
+        {required && "*"}
+      </Label>
+      <Input placeholder={placeHolder}/>
+      {helperText && <p>{helperText}</p>}
+    </div>
+  );
+}
 
 function PropertiesComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;

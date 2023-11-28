@@ -85,7 +85,7 @@ function StatsBoard(props: StatsBoardProps){
   );
 }
 
-function StatsCard(
+export function StatsCard(
   { title, value, icon, helperText, loading, className } :
   { title: string, value: string, icon: ReactNode,
     helperText: string, loading: boolean, className: string }
@@ -155,7 +155,7 @@ function FactoryCard({factory}: {factory: ReceiptFactory}){
         {factory.published && (
           <Button asChild className="w-full mt-2 text-md gap-4">
             <Link href={`/factory/${factory.id}`}>
-              View submissions <span>icon</span>
+              View prints <span>icon</span>
             </Link>
           </Button>
         )}

@@ -2,6 +2,7 @@ import React from "react";
 import { TextEntryFactoryElement } from "./receiptentries/TextEntry";
 
 export type ElementType = "TextField";
+export type printFunction = (key: string, value: string) => void;
 
 export type FactoryElements = {
   type: ElementType;
@@ -18,6 +19,7 @@ export type FactoryElements = {
   }>;
   factoryComponent: React.FC<{
     elementInstance: FactoryElementInstance;
+    printValue?: (key: string, value: string) => void;
   }>;
   propertiesComponent: React.FC<{
     elementInstance: FactoryElementInstance;

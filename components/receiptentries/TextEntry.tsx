@@ -1,6 +1,6 @@
 "use client"
 
-import { ElementType, FactoryElementInstance, FactoryElements } from "../FactoryElements"
+import { ElementType, FactoryElementInstance, FactoryElements, printFunction } from "../FactoryElements"
 import { MdTextFields } from "react-icons/md";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
@@ -8,7 +8,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field } from "@radix-ui/react-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 
@@ -51,16 +51,28 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+function factoryComponent({elementInstance, printValue}: {elementInstance: FactoryElementInstance; printValue?: printFunction}){
   const element = elementInstance as CustomInstance;
+
+  const [value, setValue] = useState("");
+
   const { label, required, placeHolder, helperText } = element.extraAttributes;
+
   return (
     <div>
       <Label>
         {label}
         {required && "*"}
       </Label>
-      <Input placeholder={placeHolder}/>
+      <Input
+        placeholder={placeHolder}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={(e) => {
+          if (!printValue) return;
+          printValue(element.id, e.target.value);
+        }}
+        value={value}
+      />
       {helperText && <p>{helperText}</p>}
     </div>
   );

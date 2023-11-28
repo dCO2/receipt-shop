@@ -135,3 +135,23 @@ export async function PublishFactory(id: number) {
     },
   });
 }
+
+export async function GetFactoryContentByUrl(factoryUrl: string){
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+  return await prisma.receiptFactory.update({
+    select: {
+      content: true,
+    },
+    data: {
+      visits: {
+        increment: 1,
+      },
+    },
+    where: {
+      shareURL: factoryUrl,
+    },
+  });
+}

@@ -75,12 +75,12 @@ function factoryComponent({elementInstance, printValue, isInvalid}: {elementInst
 
   return (
     <div>
-      <Label className={cn(error && "border-red-500")}>
+      <Label className={cn(error && "text-red-500")}>
         {label}
         {required && "*"}
       </Label>
       <Input
-        className={cn(error && "border-red-500")}
+        className={cn(error && "text-red-500")}
         placeholder={placeHolder}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
@@ -92,7 +92,7 @@ function factoryComponent({elementInstance, printValue, isInvalid}: {elementInst
         }}
         value={value}
       />
-      {helperText && <p>{helperText}</p>}
+      {helperText && <p className={cn("text-muted-foreground", error && "text-red-500")}>{helperText}</p>}
     </div>
   );
 }

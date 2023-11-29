@@ -13,7 +13,7 @@ async function PrintPage({
   const factory = await GetFactoryContentByUrl(params.factoryUrl);
 
   if (!factory) {
-    throw new Error("form not found");
+    throw new Error("factory not found");
   }
 
   const factoryContent = JSON.parse(factory.content) as FactoryElementInstance[];

@@ -25,6 +25,7 @@ export type FactoryElements = {
     elementInstance: FactoryElementInstance;
   }>;
 
+  validate: (factoryElement: FactoryElementInstance, currentValue: string) => boolean;
 };
 
 export type FactoryElementInstance = {

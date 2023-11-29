@@ -11,6 +11,7 @@ import { Field } from "@radix-ui/react-form";
 import { useEffect, useState } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
+import { cn } from "@/lib/utils";
 
 
 const type: ElementType = "TextField"
@@ -43,6 +44,15 @@ export const TextEntryFactoryElement: FactoryElements = {
   editorComponent: EditorComponent,
   factoryComponent: factoryComponent,
   propertiesComponent: PropertiesComponent,
+
+  validate: (factoryElement: FactoryElementInstance, currentValue: string): boolean => {
+    const element = factoryElement as CustomInstance;
+    if (element.extraAttributes.required) {
+      return currentValue.length > 0;
+    }
+
+    return true;
+  },
 };
 
 type CustomInstance = FactoryElementInstance & {
@@ -51,24 +61,33 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance, printValue}: {elementInstance: FactoryElementInstance; printValue?: printFunction}){
+function factoryComponent({elementInstance, printValue, isInvalid}: {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
 
   const [value, setValue] = useState("");
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    setError(isInvalid === true);
+  }, [isInvalid]);
 
   const { label, required, placeHolder, helperText } = element.extraAttributes;
 
   return (
     <div>
-      <Label>
+      <Label className={cn(error && "border-red-500")}>
         {label}
         {required && "*"}
       </Label>
       <Input
+        className={cn(error && "border-red-500")}
         placeholder={placeHolder}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
           if (!printValue) return;
+          const valid = TextEntryFactoryElement.validate(element, e.target.value);
+          setError(!valid);
+          if (!valid) return;
           printValue(element.id, e.target.value);
         }}
         value={value}

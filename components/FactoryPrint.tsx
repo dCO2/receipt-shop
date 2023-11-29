@@ -39,7 +39,7 @@ function FactoryPrint({factoryUrl, factoryContent}:
             startTransition(printFactory);
           }}
           // disabled={pending}
-        ></Button>
+        >Print</Button>
       </div>
     </div>
   )

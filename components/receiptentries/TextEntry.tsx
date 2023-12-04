@@ -7,11 +7,11 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Field } from "@radix-ui/react-form";
 import { useEffect, useState } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
+import { Switch } from "../ui/switch";
 
 
 const type: ElementType = "TextField"
@@ -61,10 +61,12 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance, printValue, isInvalid}: {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean}){
+function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
+  {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string}){
+  
   const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue || "");
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -150,6 +152,23 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
               </FormControl>
               <FormDescription>
                 The label of the field. <br /> It will be displayed above the field
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="required"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Required</FormLabel>
+              <FormControl>
+                <Switch className="border border-red-500" checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+              <FormDescription>
+                Is this field element required or not?
               </FormDescription>
               <FormMessage />
             </FormItem>

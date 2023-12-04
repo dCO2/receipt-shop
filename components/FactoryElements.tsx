@@ -20,6 +20,8 @@ export type FactoryElements = {
   factoryComponent: React.FC<{
     elementInstance: FactoryElementInstance;
     printValue?: (key: string, value: string) => void;
+    isInvalid?: boolean;
+    defaultValue?: string;
   }>;
   propertiesComponent: React.FC<{
     elementInstance: FactoryElementInstance;

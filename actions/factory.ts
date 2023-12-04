@@ -155,3 +155,22 @@ export async function GetFactoryContentByUrl(factoryUrl: string){
     },
   });
 }
+
+export async function PrintFactory(factoryUrl: string, content: string){
+  return await prisma.receiptFactory.update({
+    data: {
+      prints: {
+        increment: 1,
+      },
+      printedReceipts: {
+        create: {
+          content,
+        },
+      },
+    },
+    where: {
+      shareURL: factoryUrl,
+      published: true,
+    },
+  })
+}

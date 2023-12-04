@@ -1,7 +1,8 @@
 "use client"
-import React, { startTransition, useCallback, useRef, useState } from 'react'
+import React, { startTransition, useCallback, useRef, useState, useTransition } from 'react'
 import { FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { Button } from './ui/button';
+import { PrintFactory } from '@/actions/factory';
 
 function FactoryPrint({factoryUrl, factoryContent}:
   {factoryUrl: string; factoryContent: FactoryElementInstance[]}
@@ -10,6 +11,9 @@ function FactoryPrint({factoryUrl, factoryContent}:
   const factoryValues = useRef<{ [key: string]: string }>({}); // data that aggregates each value input into a receipt-factory
   const factoryErrors = useRef<{ [key: string]: boolean }>({}); // data that aggregates the errors in each value input into a receipt-factory
   const [renderKey, SetRenderKey] = useState(new Date().getTime()); // to trigger a rerender when validation fails. getTime to get random value
+  
+  const [printed, SetPrinted] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   /*
     function to validate (before printing) all the values input into a receipt-factory.
@@ -39,7 +43,7 @@ function FactoryPrint({factoryUrl, factoryContent}:
   };
 
   /* process called when a factory is printed */
-  const printFactory = () => {
+  const printFactory = async () => {
     factoryErrors.current = {};
     const validFactory = validateFactory();
 
@@ -54,8 +58,28 @@ function FactoryPrint({factoryUrl, factoryContent}:
       return;
     }
 
+    try {
+      const jsonContent = JSON.stringify(factoryValues.current);
+      await PrintFactory(factoryUrl, jsonContent);
+      SetPrinted(true);
+    } catch (error) {
+      // toast({
+      //   title: "Error",
+      //   description: "Something went wrong",
+      //   variant: "destructive"
+      // });
+    }
+
     console.log("FACTORY VALUES", factoryValues.current);
   };
+
+  if(printed){
+    return(
+      <div>
+        Printed!
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center w-full h-full items-center p-8">
@@ -81,8 +105,11 @@ function FactoryPrint({factoryUrl, factoryContent}:
           onClick={() => {
             startTransition(printFactory);
           }}
-          // disabled={pending}
-        >Print</Button>
+          disabled={pending}
+        >
+          {!pending && <>Print</>}
+          {pending && <>spinnin icon</>}
+        </Button>
       </div>
     </div>
   )

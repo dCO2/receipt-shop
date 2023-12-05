@@ -1,10 +1,12 @@
-import { GetFactoryById } from "@/actions/factory";
-import React from "react";
+import { GetFactoryById, GetFactoryPrintedReceipts } from "@/actions/factory";
+import React, { ReactNode } from "react";
 import { StatsCard } from "../../page";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import VisitFactoryBtn from "@/components/VisitFactoryBtn";
 import FactoryLinkShare from "@/components/FactoryLinkShare";
-
+import { ElementType, FactoryElementInstance } from "@/components/FactoryElements";
+import { format, formatDistance } from "date-fns";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 async function FactoryDetailPage(
   {params}: {params:
@@ -83,12 +85,88 @@ async function FactoryDetailPage(
   );
 }
 
-function PrintsList({id}:{id: number}){
+export default FactoryDetailPage;
+
+type Row = { [key: string]: string } & {
+  submittedAt: Date;
+};
+
+async function PrintsList({id}:{id: number}){
+  const factory = await GetFactoryPrintedReceipts(id);
+
+  if(!factory){
+    throw new Error("Cannot find factory!");
+  }
+
+  const factoryElements = JSON.parse(factory.content) as FactoryElementInstance[];
+  const columns: {
+    id: string;
+    label: string;
+    required: boolean;
+    type: ElementType;
+  }[] = [];
+
+  factoryElements.forEach((element) => {
+    switch (element.type) {
+      case "TextField":
+        columns.push({
+          id: element.id,
+          label: element.extraAttributes?.label,
+          required: element.extraAttributes?.required,
+          type: element.type,
+        });
+        break;
+      default:
+        break;
+    }
+  });
+
+  const rows: Row[] = [];
+  factory.printedReceipts.forEach((print) => {
+    const content = JSON.parse(print.content);
+    rows.push({
+      ...content,
+      submittedAt: print.createdAt,
+    });
+  });
+
   return(
     <div>
-      List
+      <h1 className="text-2xl font-bold my-4">Prints</h1>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.id} className="uppercase">
+                  {column.label}
+                </TableHead>
+              ))}
+              <TableHead className="text-muted-foreground text-right uppercase">Printed at</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                {columns.map((column) => (
+                  <RowCell key={column.id} type={column.type} value={row[column.id]} />
+                ))}
+                <TableCell className="text-muted-foreground text-right">
+                  {formatDistance(row.submittedAt, new Date(), {
+                    addSuffix: true,
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
 
-export default FactoryDetailPage;
+function RowCell({ type, value }: { type: ElementType; value: string }) {
+  let node: ReactNode = value;
+  
+  return <TableCell>{node}</TableCell>;
+}

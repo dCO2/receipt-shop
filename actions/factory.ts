@@ -174,3 +174,20 @@ export async function PrintFactory(factoryUrl: string, content: string){
     },
   })
 }
+
+export async function GetFactoryPrintedReceipts(id: number){
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await prisma.receiptFactory.findUnique({
+    where: {
+      userId: user.id,
+      id,
+    },
+    include: {
+      printedReceipts: true,
+    },
+  });
+}

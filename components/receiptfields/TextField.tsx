@@ -17,7 +17,7 @@ import { Switch } from "../ui/switch";
 const type: ElementType = "TextField"
 
 const extraAttributes = {
-  label: "Text Entry",
+  label: "Text Field",
   helperText: "Helper Text",
   required: false,
   placeHolder: "Type text here..."
@@ -30,7 +30,7 @@ const propertiesSchema = z.object({
   placeHolder: z.string().max(50),
 });
 
-export const TextEntryFactoryElement: FactoryElements = {
+export const TextFieldFactoryElement: FactoryElements = {
   type,
   construct: (id: string) => ({
     id,
@@ -39,7 +39,7 @@ export const TextEntryFactoryElement: FactoryElements = {
   }),
   editorBtnElement: {
     icon: MdTextFields,
-    label: "Text Entry"
+    label: "Text Field"
   },
   editorComponent: EditorComponent,
   factoryComponent: factoryComponent,
@@ -87,7 +87,7 @@ function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}
         onChange={(e) => setValue(e.target.value)}
         onBlur={(e) => {
           if (!printValue) return;
-          const valid = TextEntryFactoryElement.validate(element, e.target.value);
+          const valid = TextFieldFactoryElement.validate(element, e.target.value);
           setError(!valid);
           if (!valid) return;
           printValue(element.id, e.target.value);

@@ -1,5 +1,5 @@
 import React from "react";
-import { TextEntryFactoryElement } from "./receiptentries/TextEntry";
+import { TextFieldFactoryElement } from "./receiptfields/TextField";
 
 export type ElementType = "TextField";
 export type printFunction = (key: string, value: string) => void;
@@ -41,5 +41,5 @@ type FactoryElementType = {
 }
 
 export const FactoryElements: FactoryElementType = {
-  TextField: TextEntryFactoryElement
+  TextField: TextFieldFactoryElement
 };

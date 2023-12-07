@@ -1,7 +1,8 @@
 import React from "react";
 import { TextFieldFactoryElement } from "./receiptfields/TextField";
+import { StoreNameFieldFactoryElement } from "./receiptfields/StoreNameField";
 
-export type ElementType = "TextField";
+export type ElementType = "TextField" | "StoreNameField";
 export type printFunction = (key: string, value: string) => void;
 
 export type FactoryElements = {
@@ -41,5 +42,6 @@ type FactoryElementType = {
 }
 
 export const FactoryElements: FactoryElementType = {
-  TextField: TextFieldFactoryElement
+  TextField: TextFieldFactoryElement,
+  StoreNameField: StoreNameFieldFactoryElement,
 };

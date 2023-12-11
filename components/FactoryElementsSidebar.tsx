@@ -6,7 +6,11 @@ function FactoryElementsSidebar() {
   return (
     <div>
       List of Elements
+      <br/>
       <SidebarBtnElement factoryElement={FactoryElements.TextField} />
+      <br/>
+      <SidebarBtnElement factoryElement={FactoryElements.StoreNameField} />
+      <br/>
     </div>
   )
 }

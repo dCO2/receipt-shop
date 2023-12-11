@@ -7,27 +7,27 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
-import { Switch } from "../ui/switch";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 
-const type: ElementType = "StoreNameField"
+const type: ElementType = "StoreNameField";
+const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  label: "Store Field",
-  helperText: "Helper Text",
-  required: false,
+  value: "Placeholder Store",
+  fontSize: FontSize[2],
+  helperText: "This is name of the store. It will be displayed atop every factory and hence, receipt",
+  required: true,
   placeHolder: "Type in name of store..."
 }
 
 const propertiesSchema = z.object({
-  label: z.string().min(2).max(50),
-  helperText: z.string().max(200),
-  required: z.boolean().default(false),
-  placeHolder: z.string().max(50),
+  value: z.string().min(5).max(50),
+  fontSize: z.string(),
 });
 
 export const StoreNameFieldFactoryElement: FactoryElements = {
@@ -66,35 +66,13 @@ function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}
   
   const element = elementInstance as CustomInstance;
 
-  const [value, setValue] = useState(defaultValue || "");
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    setError(isInvalid === true);
-  }, [isInvalid]);
-
-  const { label, required, placeHolder, helperText } = element.extraAttributes;
+  const { value } = element.extraAttributes;
 
   return (
     <div>
-      <Label className={cn(error && "text-red-500")}>
-        {label}
-        {required && "*"}
+      <Label>
+        {value}
       </Label>
-      <Input
-        className={cn(error && "text-red-500")}
-        placeholder={placeHolder}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={(e) => {
-          if (!printValue) return;
-          const valid = StoreNameFieldFactoryElement.validate(element, e.target.value);
-          setError(!valid);
-          if (!valid) return;
-          printValue(element.id, e.target.value);
-        }}
-        value={value}
-      />
-      {helperText && <p className={cn("text-muted-foreground", error && "text-red-500")}>{helperText}</p>}
     </div>
   );
 }
@@ -107,10 +85,8 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
     resolver: zodResolver(propertiesSchema),
     mode: "onBlur",
     defaultValues: {
-      label: element.extraAttributes.label,
-      helperText: element.extraAttributes.helperText,
-      required: element.extraAttributes.required,
-      placeHolder: element.extraAttributes.placeHolder,
+      value: element.extraAttributes.value,
+      fontSize: element.extraAttributes.fontSize,
     }
   });
 
@@ -136,12 +112,13 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
         }}
         className="space-y-3"
       >
+
         <FormField
           control={form.control}
-          name="label"
+          name="value"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Label</FormLabel>
+              <FormLabel>Value</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -151,7 +128,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
                 />
               </FormControl>
               <FormDescription>
-                The label of the field. <br /> It will be displayed above the field
+                This is name of the store. It will be displayed atop every factory and hence, receipt
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -160,16 +137,50 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 
         <FormField
           control={form.control}
-          name="required"
+          name="fontSize"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Required</FormLabel>
+            <FormItem className="space-y-3">
+              <FormLabel>Choose font size...</FormLabel>
               <FormControl>
-                <Switch className="border border-red-500" checked={field.value} onCheckedChange={field.onChange} />
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex flex-row space-y-1"
+                >
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="1" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      text-xs
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="2" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      text-sm
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="3" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      text-base
+                    </FormLabel>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-3 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="4" />
+                    </FormControl>
+                    <FormLabel className="font-normal">
+                      text-lg
+                    </FormLabel>
+                  </FormItem>
+                </RadioGroup>
               </FormControl>
-              <FormDescription>
-                Is this field element required or not?
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -181,15 +192,15 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
-  const { label, required, placeHolder, helperText } = element.extraAttributes;
+  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+  console.log(fontSize);
   return (
     <div>
       <Label>
-        {label}
+        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
         {required && "*"}
       </Label>
-      <Input readOnly disabled placeholder={placeHolder}/>
-      {helperText && <p>{helperText}</p>}
+      {helperText && <p className="text-sm italic">{helperText}</p>}
     </div>
   );
 }

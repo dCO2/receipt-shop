@@ -1,8 +1,14 @@
 import React from "react";
 import { TextFieldFactoryElement } from "./receiptfields/TextField";
 import { StoreNameFieldFactoryElement } from "./receiptfields/StoreNameField";
+import { StoreTelFieldFactoryElement } from "./receiptfields/StoreTelField";
+import { StoreAddressFieldFactoryElement } from "./receiptfields/StoreAddressField";
+import { StoreLogoFieldFactoryElement } from "./receiptfields/StoreLogo";
+import { StoreEmailFieldFactoryElement } from "./receiptfields/StoreEmailField";
 
-export type ElementType = "TextField" | "StoreNameField";
+export type ElementType = "TextField" | "StoreNameField" | "StoreTelField" |
+                          "StoreAddressField" | "StoreLogoField" | "StoreEmailField";
+
 export type printFunction = (key: string, value: string) => void;
 
 export type FactoryElements = {
@@ -44,4 +50,8 @@ type FactoryElementType = {
 export const FactoryElements: FactoryElementType = {
   TextField: TextFieldFactoryElement,
   StoreNameField: StoreNameFieldFactoryElement,
+  StoreTelField: StoreTelFieldFactoryElement,
+  StoreAddressField: StoreAddressFieldFactoryElement,
+  StoreLogoField: StoreLogoFieldFactoryElement,
+  StoreEmailField: StoreEmailFieldFactoryElement,
 };

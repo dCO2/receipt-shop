@@ -41,7 +41,7 @@ function CreateFactoryBtn() {
           className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
         >
           <span>icon</span>
-          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new form</p>
+          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new factory</p>
         </Button>
       </DialogTrigger>
       <DialogContent>

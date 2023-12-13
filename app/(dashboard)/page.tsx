@@ -2,12 +2,13 @@ import { GetAllFactoriesStat, GetAllFactories } from "@/actions/factory";
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import CreateFactoryBtn from "@/components/CreateFactoryBtn";
 import { ReceiptFactory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { formatDistance } from "date-fns";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 
 export default function Home() {
@@ -16,16 +17,18 @@ export default function Home() {
       <Suspense fallback={<StatsBoard loading={true}/>}>
         <StatsBoardWrapper/>
       </Suspense>
+      <hr/>
       <div>
         <h2>Your Factories</h2>
-        <CreateFactoryBtn/>
       </div>
-      <div>
+      <div className="flex flex-wrap justify-center">
         <FactoryList/>
         {/* <Suspense fallback={<FactoryList/>}>
           <FactoryList/>
         </Suspense> */}
+        <CreateFactoryBtn/>
       </div>
+      
     </div>
   );
 }
@@ -43,13 +46,12 @@ interface StatsBoardProps {
 
 function StatsBoard(props: StatsBoardProps){
   const { data, loading } = props;
-
   return (
-    <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+    <div className="flex flex-wrap justify-center pt-8 gap-4 mb-8 lg:flex-row">
       <StatsCard
         title="Total Visits"
         value={data?.visits.toLocaleString() || ""}
-        icon={<EyeIcon className="h-7 w-7"/>}
+        icon={<EyeIcon className="h-4 w-4"/>}
         helperText="All time receipts factory visits"
         loading={loading}
         className=""
@@ -58,7 +60,7 @@ function StatsBoard(props: StatsBoardProps){
       <StatsCard
         title="Total Prints"
         value={data?.prints.toLocaleString() || ""}
-        icon={<EyeIcon className="h-7 w-7"/>}
+        icon={<EyeIcon className="h-4 w-4"/>}
         helperText="All time receipt factory prints"
         loading={loading}
         className=""
@@ -67,7 +69,7 @@ function StatsBoard(props: StatsBoardProps){
       <StatsCard
         title="Print Rate"
         value={data?.printRate.toLocaleString() || ""}
-        icon={<EyeIcon className="h-7 w-7"/>}
+        icon={<EyeIcon className="h-4 w-4"/>}
         helperText="Visits that result in receipt prints"
         loading={loading}
         className=""
@@ -76,7 +78,7 @@ function StatsBoard(props: StatsBoardProps){
       <StatsCard
         title="Bounce Rate"
         value={data?.bounceRate.toLocaleString() || ""}
-        icon={<EyeIcon className="h-7 w-7"/>}
+        icon={<EyeIcon className="h-4 w-4"/>}
         helperText="Visits without interaction"
         loading={loading}
         className=""
@@ -91,21 +93,33 @@ export function StatsCard(
     helperText: string, loading: boolean, className: string }
 ){
   return(
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle> {icon}
+    <Card className="flex float-left">
+      <CardHeader className="p-2">
+        <CardContent className="p-2">
+          <div className="flex justify-between">
+            <div className="text-4xl">
+              {loading && (
+                <Skeleton>
+                  <span className="">0</span>
+                </Skeleton>
+              )}
+              {!loading && value}
+            </div>
+            <HoverCard openDelay={0}>
+              <HoverCardTrigger>
+                <span className=""><EllipsisVerticalIcon className="h-4 w-4"/></span>
+              </HoverCardTrigger>
+              <HoverCardContent className="shadow-none bg-white p-1" sideOffset={-100}>
+                {helperText}
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="inline-block">{title}</div>
+            <div className="inline-block">{icon}</div>
+          </div>
+        </CardContent>
       </CardHeader>
-      <CardContent>
-        <div>
-          {loading && (
-            <Skeleton>
-              <span className="">0</span>
-            </Skeleton>
-          )}
-          {!loading && value}
-        </div>
-        <p className="">{helperText}</p>
-      </CardContent>
     </Card>
   )
 }
@@ -117,17 +131,17 @@ function FactoryListSkeleton(){
 async function FactoryList(){
   const factoryList = await GetAllFactories();
   return(
-    <>
+    <div className="flex flex-wrap justify-center pt-8 gap-4 mb-8 lg:max-w-3xl">
       {factoryList.map((factory) => (
         <FactoryCard key={factory.id} factory={factory}/>
       ))}
-    </>
+    </div>
   );
 }
 
 function FactoryCard({factory}: {factory: ReceiptFactory}){
   return(
-    <Card>
+    <Card className="max-w-xs min-w-[20rem]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 justify-between">
           <span className="truncate font-bold">{factory.name}</span>

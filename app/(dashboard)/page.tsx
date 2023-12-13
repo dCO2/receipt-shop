@@ -2,13 +2,14 @@ import { GetAllFactoriesStat, GetAllFactories } from "@/actions/factory";
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
-import { EyeIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, EllipsisVerticalIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import CreateFactoryBtn from "@/components/CreateFactoryBtn";
 import { ReceiptFactory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { Badge } from "@/components/ui/badge";
 
 
 export default function Home() {
@@ -144,9 +145,9 @@ function FactoryCard({factory}: {factory: ReceiptFactory}){
     <Card className="max-w-xs min-w-[20rem]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 justify-between">
-          <span className="truncate font-bold">{factory.name}</span>
-          {factory.published && <span>Published (Badge)</span>}
-          {!factory.published && <span>Draft (Badge)</span>}
+          <span className="text-lg truncate font-bold">{factory.name}</span>
+          {factory.published && <Badge>Published</Badge>}
+          {!factory.published && <Badge variant={"destructive"}>Draft</Badge>}
         </CardTitle>
         <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
           {formatDistance(factory.createdAt, new Date(), {
@@ -154,22 +155,22 @@ function FactoryCard({factory}: {factory: ReceiptFactory}){
           })}
           {factory.published && (
             <span className="flex items-center gap-2">
-              <span>icon</span>
               <span>{factory.visits.toLocaleString()}</span>
-              <span>icon</span>
-              <span>{factory.prints.toLocaleString()}</span>
+              <EyeIcon className="h-4 w-4"/>
+              <span>{factory.prints.toLocaleString()}</span>              
+              <PrinterIcon className="h-4 w-4"/>
             </span>
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent className="h-[20px] truncate text-sm text-muted-foreground">
+      <CardContent className="italic h-[20px] truncate text-sm text-muted-foreground">
         {factory.description || "No description"}
       </CardContent>
       <CardFooter>
         {factory.published && (
           <Button asChild className="w-full mt-2 text-md gap-4">
             <Link href={`/factory/${factory.id}`}>
-              View prints <span>icon</span>
+            view prints <EyeIcon className="h-4 w-4"/>
             </Link>
           </Button>
         )}

@@ -14,6 +14,7 @@ import { CreateFactory } from '@/actions/factory';
 
 import React from 'react';
 import { DialogClose } from '@radix-ui/react-dialog';
+import { CogIcon, DocumentPlusIcon } from '@heroicons/react/24/outline';
 
 const factorySchema = z.object({
   name: z.string().min(4),
@@ -40,7 +41,8 @@ function CreateFactoryBtn() {
           variant={"outline"}
           className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
         >
-          <span>icon</span>
+          {/* <CogIcon className="h-8 w-8"/> */}
+          <DocumentPlusIcon className="h-8 w-8"/>
           <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new factory</p>
         </Button>
       </DialogTrigger>

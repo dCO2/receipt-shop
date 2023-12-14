@@ -39,7 +39,7 @@ function CreateFactoryBtn() {
       <DialogTrigger asChild>
         <Button
           variant={"outline"}
-          className="group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
+          className="mt-8 group border border-primary/20 h-[190px] items-center justify-center flex flex-col hover:border-primary hover:cursor-pointer border-dashed gap-4"
         >
           {/* <CogIcon className="h-8 w-8"/> */}
           <DocumentPlusIcon className="h-8 w-8"/>

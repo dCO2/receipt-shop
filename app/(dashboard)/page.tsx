@@ -2,7 +2,7 @@ import { GetAllFactoriesStat, GetAllFactories } from "@/actions/factory";
 import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReactNode, Suspense } from "react";
-import { EyeIcon, EllipsisVerticalIcon, PrinterIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, EllipsisVerticalIcon, PrinterIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import CreateFactoryBtn from "@/components/CreateFactoryBtn";
 import { ReceiptFactory } from "@prisma/client";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { formatDistance } from "date-fns";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 
 export default function Home() {
@@ -19,8 +20,8 @@ export default function Home() {
         <StatsBoardWrapper/>
       </Suspense>
       <hr/>
-      <div>
-        <h2>Your Factories</h2>
+      <div className="flex mt-6 justify-center text-2xl">
+        <h2>Existing Factories</h2>
       </div>
       <div className="flex flex-wrap justify-center">
         <FactoryList/>
@@ -55,25 +56,25 @@ function StatsBoard(props: StatsBoardProps){
         icon={<EyeIcon className="h-4 w-4"/>}
         helperText="All time receipts factory visits"
         loading={loading}
-        className=""
+        color="text-blue-400"
       />
       
       <StatsCard
         title="Total Prints"
         value={data?.prints.toLocaleString() || ""}
-        icon={<EyeIcon className="h-4 w-4"/>}
+        icon={<PrinterIcon className="h-4 w-4"/>}
         helperText="All time receipt factory prints"
         loading={loading}
-        className=""
+        color="text-green-400"
       />
 
       <StatsCard
         title="Print Rate"
         value={data?.printRate.toLocaleString() || ""}
-        icon={<EyeIcon className="h-4 w-4"/>}
+        icon={<PrinterIcon className="h-4 w-4"/>}
         helperText="Visits that result in receipt prints"
         loading={loading}
-        className=""
+        color="text-fuchsia-400"
       />
 
       <StatsCard
@@ -82,19 +83,19 @@ function StatsBoard(props: StatsBoardProps){
         icon={<EyeIcon className="h-4 w-4"/>}
         helperText="Visits without interaction"
         loading={loading}
-        className=""
+        color="text-red-400"
       />
     </div>
   );
 }
 
 export function StatsCard(
-  { title, value, icon, helperText, loading, className } :
+  { title, value, icon, helperText, loading, color } :
   { title: string, value: string, icon: ReactNode,
-    helperText: string, loading: boolean, className: string }
+    helperText: string, loading: boolean, color: string }
 ){
   return(
-    <Card className="flex float-left">
+    <Card className="flex float-left bg-white">
       <CardHeader className="p-2">
         <CardContent className="p-2">
           <div className="flex justify-between">
@@ -115,7 +116,7 @@ export function StatsCard(
               </HoverCardContent>
             </HoverCard>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className={cn(color, "flex items-center space-x-2")}>
             <div className="inline-block">{title}</div>
             <div className="inline-block">{icon}</div>
           </div>
@@ -132,25 +133,27 @@ function FactoryListSkeleton(){
 async function FactoryList(){
   const factoryList = await GetAllFactories();
   return(
-    <div className="flex flex-wrap justify-center pt-8 gap-4 mb-8 lg:max-w-3xl">
-      {factoryList.map((factory) => (
-        <FactoryCard key={factory.id} factory={factory}/>
-      ))}
+    <div>
+      <div className="flex justify-center flex-wrap pt-8 gap-4 mb-8 lg:max-w-3xl lg:justify-normal">
+        {factoryList.map((factory) => (
+          <FactoryCard key={factory.id} factory={factory}/>
+        ))}
+      </div>
     </div>
   );
 }
 
 function FactoryCard({factory}: {factory: ReceiptFactory}){
   return(
-    <Card className="max-w-xs min-w-[20rem]">
+    <Card className="float-left max-w-xs min-w-[20rem] bg-white">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 justify-between">
           <span className="text-lg truncate font-bold">{factory.name}</span>
           {factory.published && <Badge>Published</Badge>}
           {!factory.published && <Badge variant={"destructive"}>Draft</Badge>}
         </CardTitle>
-        <CardDescription className="flex items-center justify-between text-muted-foreground text-sm">
-          {formatDistance(factory.createdAt, new Date(), {
+        <CardDescription className="flex items-center justify-between text-muted-foreground text-xs">
+          created {formatDistance(factory.createdAt, new Date(), {
             addSuffix: true,
           })}
           {factory.published && (
@@ -163,21 +166,21 @@ function FactoryCard({factory}: {factory: ReceiptFactory}){
           )}
         </CardDescription>
       </CardHeader>
-      <CardContent className="italic h-[20px] truncate text-sm text-muted-foreground">
+      <CardContent className="h-[20px] truncate text-sm text-muted-foreground">
         {factory.description || "No description"}
       </CardContent>
       <CardFooter>
         {factory.published && (
-          <Button asChild className="w-full mt-2 text-md gap-4">
+          <Button asChild className="w-full mt-2 text-sm gap-4">
             <Link href={`/factory/${factory.id}`}>
-            view prints <EyeIcon className="h-4 w-4"/>
+            <div className="flex flex-row items-center gap-1"><EyeIcon className="h-4 w-4"/> view prints</div>
             </Link>
           </Button>
         )}
         {!factory.published && (
-          <Button asChild variant={"secondary"} className="w-full mt-2 text-md gap-4">
+          <Button asChild variant={"secondary"} className="w-full mt-2 text-sm gap-4">
             <Link href={`/editfactory/${factory.id}`}>
-              Edit factory <span>icon</span>
+              <div className="flex flex-row items-center gap-1"><PencilSquareIcon className="h-4 w-4"/> edit factory</div>
             </Link>
           </Button>
         )}

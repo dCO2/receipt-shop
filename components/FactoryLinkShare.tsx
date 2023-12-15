@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from "./ui/use-toast";
 
 function FactoryLinkShare({ shareUrl }: { shareUrl: string }) {
   const [mounted, setMounted] = useState(false);
@@ -22,10 +23,10 @@ function FactoryLinkShare({ shareUrl }: { shareUrl: string }) {
         className="w-[250px]"
         onClick={() => {
           navigator.clipboard.writeText(shareLink);
-          // toast({
-          //   title: "Copied!",
-          //   description: "Link copied to clipboard",
-          // });
+          toast({
+            title: "Copied!",
+            description: "Link copied to clipboard",
+          });
         }}
       >
         <span>iconShare</span>

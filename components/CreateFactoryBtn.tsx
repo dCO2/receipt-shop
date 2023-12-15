@@ -1,6 +1,5 @@
 "use client";
-// import * as Dialog from '@radix-ui/react-dialog';
-// import * as Form from '@radix-ui/react-form';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form"
 import * as z from "zod";
@@ -13,8 +12,9 @@ import { Textarea } from './ui/textarea';
 import { CreateFactory } from '@/actions/factory';
 
 import React from 'react';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { CogIcon, DocumentPlusIcon } from '@heroicons/react/24/outline';
+import { toast } from './ui/use-toast';
+import { useRouter } from "next/navigation";
 
 const factorySchema = z.object({
   name: z.string().min(4),
@@ -24,14 +24,26 @@ const factorySchema = z.object({
 type factorySchemaType = z.infer<typeof factorySchema>;
 
 function CreateFactoryBtn() {
-  
+  const router = useRouter();
   const form = useForm<z.infer<typeof factorySchema>>({
     resolver: zodResolver(factorySchema),
   });
 
   async function onSubmit(values: factorySchemaType){
-    const factoryId = await CreateFactory(values);
-    console.log(factoryId);
+    try {
+      const factoryId = await CreateFactory(values);
+      toast({
+        title: "Success",
+        description: "Factory created successfully",
+      });
+      router.push(`/editfactory/${factoryId}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong, please try again later",
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -43,10 +55,10 @@ function CreateFactoryBtn() {
         >
           {/* <CogIcon className="h-8 w-8"/> */}
           <DocumentPlusIcon className="h-8 w-8"/>
-          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">Create new factory</p>
+          <p className="font-bold text-xl text-muted-foreground group-hover:text-primary">create new factory</p>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>Create New Factory</DialogTitle>
           <DialogDescription>Create a new receipt factory that you might use to make many receipts</DialogDescription>
@@ -82,10 +94,10 @@ function CreateFactoryBtn() {
           </form>
         </Form>
         <DialogFooter>
-          <button onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="w-full mt-4">
+          <Button onClick={form.handleSubmit(onSubmit)} disabled={form.formState.isSubmitting} className="w-full mt-4">
             {!form.formState.isSubmitting && <span>Create Factory</span>}
             {form.formState.isSubmitting && <span>Spinning</span>}
-          </button>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

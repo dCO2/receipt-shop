@@ -95,7 +95,7 @@ export function StatsCard(
     helperText: string, loading: boolean, color: string }
 ){
   return(
-    <Card className="flex float-left bg-white">
+    <Card className="flex float-left">
       <CardHeader className="p-2">
         <CardContent className="p-2">
           <div className="flex justify-between">
@@ -145,7 +145,7 @@ async function FactoryList(){
 
 function FactoryCard({factory}: {factory: ReceiptFactory}){
   return(
-    <Card className="float-left max-w-xs min-w-[20rem] bg-white">
+    <Card className="float-left max-w-xs min-w-[20rem]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 justify-between">
           <span className="text-lg truncate font-bold">{factory.name}</span>

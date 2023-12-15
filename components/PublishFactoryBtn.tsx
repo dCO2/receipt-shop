@@ -3,6 +3,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from './ui/button'
 import { PublishFactory } from '@/actions/factory';
 import { useRouter } from 'next/navigation';
+import { toast } from './ui/use-toast';
 
 function PublishFactoryBtn({id}: {id: number}) {
   const [ loading, startTransition ] = useTransition();
@@ -11,18 +12,16 @@ function PublishFactoryBtn({id}: {id: number}) {
   async function publishFactory(){
     try {
       await PublishFactory(id);
-      // todo: implement toast
-      // toast({
-      //   title: "Success",
-      //   description: "Factory successfully published",
-      // });
+      toast({
+        title: "Success",
+        description: "Factory successfully published",
+      });
       router.refresh();
     } catch (error) {
-      // todo: implement toast
-      // toast({
-      //   title: "Error",
-      //   description: "Something went wrong",
-      // });
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+      });
     }
   }
 

@@ -3,6 +3,7 @@ import React, { startTransition, useCallback, useRef, useState, useTransition } 
 import { FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { Button } from './ui/button';
 import { PrintFactory } from '@/actions/factory';
+import { toast } from './ui/use-toast';
 
 function FactoryPrint({factoryUrl, factoryContent}:
   {factoryUrl: string; factoryContent: FactoryElementInstance[]}
@@ -49,11 +50,11 @@ function FactoryPrint({factoryUrl, factoryContent}:
 
     if(!validFactory){
       SetRenderKey(new Date().getTime());
-      // toast({
-      //   title: "Error",
-      //   description: "Please check the factory for errors",
-      //   variant: "destructive"
-      // });
+      toast({
+        title: "Error",
+        description: "Please check the factory for errors",
+        variant: "destructive"
+      });
 
       return;
     }
@@ -63,11 +64,11 @@ function FactoryPrint({factoryUrl, factoryContent}:
       await PrintFactory(factoryUrl, jsonContent);
       SetPrinted(true);
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Something went wrong",
-      //   variant: "destructive"
-      // });
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive"
+      });
     }
 
     console.log("FACTORY VALUES", factoryValues.current);

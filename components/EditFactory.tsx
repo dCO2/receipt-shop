@@ -12,6 +12,7 @@ import useEditor from "./hooks/useEditor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Link from "next/link";
+import { toast } from "./ui/use-toast";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
   const {setElements} = useEditor();
@@ -41,10 +42,10 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
               className="mt-2 w-full"
               onClick={() => {
                 navigator.clipboard.writeText(shareUrl);
-                // toast({
-                //   title: "Copied!",
-                //   description: "Link copied to clipboard",
-                // });
+                toast({
+                  title: "Copied!",
+                  description: "Link copied to clipboard",
+                });
               }}
             >
               Copy link

@@ -2,6 +2,7 @@ import React, { useTransition } from 'react'
 import useEditor from './hooks/useEditor'
 import { UpdateFactoryContent } from '@/actions/factory';
 import { Button } from './ui/button';
+import { toast } from './ui/use-toast';
 
 function SaveFactoryBtn({id}: {id: number}) {
   const { elements } = useEditor();
@@ -11,18 +12,16 @@ function SaveFactoryBtn({id}: {id: number}) {
     try {
       const ElementsJson = JSON.stringify(elements);
       await UpdateFactoryContent(id, ElementsJson);
-      // todo: build toast
-      // toast({
-      //   title: "Success",
-      //   description: "Factory successfully saved",
-      // });
+      toast({
+        title: "Success",
+        description: "Factory successfully saved",
+      });
     } catch (error) {
-      // todo: build toast
-      // toast({
-      //   title: "Error",
-      //   description: "Something went wrong",
-      //   variant: "destructive",
-      // });
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
     }
   }
   return (

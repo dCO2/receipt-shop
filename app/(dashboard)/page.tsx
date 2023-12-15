@@ -111,7 +111,7 @@ export function StatsCard(
               <HoverCardTrigger>
                 <span className=""><EllipsisVerticalIcon className="h-4 w-4"/></span>
               </HoverCardTrigger>
-              <HoverCardContent className="shadow-none bg-white p-1" sideOffset={-100}>
+              <HoverCardContent className="shadow-none p-1" sideOffset={-100}>
                 {helperText}
               </HoverCardContent>
             </HoverCard>

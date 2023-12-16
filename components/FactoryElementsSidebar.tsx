@@ -4,19 +4,16 @@ import { FactoryElements } from './FactoryElements'
 
 function FactoryElementsSidebar() {
   return (
-    <div>
-      List of Elements
-      <SidebarBtnElement factoryElement={FactoryElements.StoreLogoField} />
-      <br/>
-      <SidebarBtnElement factoryElement={FactoryElements.StoreEmailField} />
-      <br/>
-      <SidebarBtnElement factoryElement={FactoryElements.TextField} />
-      <br/>
-      <SidebarBtnElement factoryElement={FactoryElements.StoreNameField} />
-      <br/>
-      <SidebarBtnElement factoryElement={FactoryElements.StoreAddressField} />
-      <br/>
-      <SidebarBtnElement factoryElement={FactoryElements.StoreTelField} />
+    <div className="flex flex-col gap-0 p-2">
+      <div>List of Elements</div>
+      <div className="flex flex-col gap-1">
+        <SidebarBtnElement factoryElement={FactoryElements.StoreLogoField} />
+        <SidebarBtnElement factoryElement={FactoryElements.StoreEmailField} />
+        <SidebarBtnElement factoryElement={FactoryElements.TextField} />
+        <SidebarBtnElement factoryElement={FactoryElements.StoreNameField} />
+        <SidebarBtnElement factoryElement={FactoryElements.StoreAddressField} />
+        <SidebarBtnElement factoryElement={FactoryElements.StoreTelField} />
+      </div>
     </div>
   )
 }

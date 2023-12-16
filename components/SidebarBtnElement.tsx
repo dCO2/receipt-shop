@@ -21,9 +21,12 @@ function SidebarBtnElement({ factoryElement }: {
       ref={draggable.setNodeRef}
       {...draggable.listeners}
       {...draggable.attributes}
+      className="flex justify-start"
     >
-      <Icon/>
-      <p>{label}</p>
+      <div className="flex flex-row items-center">
+        <Icon/> &nbsp;
+        <p className="overflow-hidden whitespace-nowrap">{label}</p>
+      </div>
     </Button>
   )
 }
@@ -36,8 +39,8 @@ export function SidebarBtnElementDragOverlay({ factoryElement }: {
   
   return (
     <Button>
-      <Icon/>
-      <p>{label}</p>
+      <Icon/> &nbsp;
+      <span>{label}</span>
     </Button>
   )
 }

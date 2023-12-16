@@ -30,7 +30,7 @@ function PublishFactoryBtn({id}: {id: number}) {
       <AlertDialogTrigger asChild>
         <Button className="gap-2">
           <span>P</span>
-          Publish
+          <span className="hidden lg:visible">Publish</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

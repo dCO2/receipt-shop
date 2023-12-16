@@ -72,14 +72,13 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
 
   return(
     <DndContext>
-      <main>
-        <nav>
-          <div>
-            <h2>
-              <span>Factory:</span>
-              {factory.name}
+      <main className="m-4">
+        <nav className="mb-4">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="flex items-center">
+              <span>Factory:</span>&nbsp;<span className="font-bold">{factory.name}</span>
             </h2>
-            <div>
+            <div className="flex items-center justify-between gap-2">
               <PreviewFactoryBtn/>
               {!factory.published && (
                 <>

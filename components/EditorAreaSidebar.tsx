@@ -6,7 +6,7 @@ import ElementPropertiesSidebar from './ElementPropertiesSidebar';
 function EditorAreaSidebar() {
   const {focusedElement} = useEditor();
   return (
-    <aside className="">
+    <aside className="border border-solid">
       {focusedElement && <ElementPropertiesSidebar/>}
       {!focusedElement && <FactoryElementsSidebar/>}
     </aside>

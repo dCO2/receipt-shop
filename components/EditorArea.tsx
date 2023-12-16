@@ -37,7 +37,7 @@ function EditorArea() {
   return (
     <div className="flex w-full h-full">
       <div
-        className="w-full"
+        className="w-full border border-solid"
         onClick={() => { if(focusedElement) setFocusedElement(null)}}
       >
         <div 

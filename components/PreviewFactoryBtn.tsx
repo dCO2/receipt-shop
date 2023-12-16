@@ -13,7 +13,7 @@ function PreviewFactoryBtn() {
       <DialogTrigger asChild>
         <Button variant={"outline"} className="gap-2">
           <MdPreview className="h-6 w-6" />
-          Preview
+          <span className="hidden lg:visible">Preview</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="w-screen h-screen max-h-screen max-w-full flex flex-col flex-grow p-0 gap-0">

@@ -43,7 +43,7 @@ function EditorArea() {
         <div 
           ref={droppable.setNodeRef}
           className={cn(
-            "max-w-[920px] h-full flex flex-col flex-grow items-center justify-start flex-1 overflow-y-auto",
+            "max-w-[400px] h-full flex flex-col flex-grow items-center justify-start m-auto flex-1 overflow-y-auto",
             droppable.isOver && "ring-2 ring-primary/20")}
         >
           {!droppable.isOver && (elements.length==0) &&
@@ -66,7 +66,9 @@ function EditorArea() {
           }
         </div>
       </div>
+      <div>
       <EditorAreaSidebar/>
+      </div>
     </div>
   )
 }
@@ -95,7 +97,7 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
 
   return (
     <div 
-      className="relative h-[120px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
+      className="relative h-[80px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
       onClick={(e) => {
         e.stopPropagation();
         setFocusedElement(element);
@@ -103,7 +105,7 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
     >
       <div ref={topHalf.setNodeRef} className="absolute w-full h-1/2 rounded-t-md"/>
       <div ref={bottomHalf.setNodeRef} className="absolute w-full bottom-0 h-1/2 rounded-b-md"/>
-      <div className="flex w-full h-[120px] items-center rounded-md bg-accent/40 px-4 py-2 pointer-events-none">
+      <div className="flex w-full h-[80px] items-center rounded-md bg-accent/40 px-2 py-2 pointer-events-none">
         <EditorElement elementInstance={element}/>  
       </div>
     </div>

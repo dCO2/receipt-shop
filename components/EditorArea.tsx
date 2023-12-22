@@ -35,9 +35,9 @@ function EditorArea() {
   });
 
   return (
-    <div className="flex w-full h-full">
+    <div className="flex ">
       <div
-        className="w-full border border-solid"
+        className="w-full"
         onClick={() => { if(focusedElement) setFocusedElement(null)}}
       >
         <div 
@@ -66,8 +66,8 @@ function EditorArea() {
           }
         </div>
       </div>
-      <div>
-      <EditorAreaSidebar/>
+      <div className="flex">
+        <EditorAreaSidebar/>
       </div>
     </div>
   )

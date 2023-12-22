@@ -21,7 +21,7 @@ function SidebarBtnElement({ factoryElement }: {
       ref={draggable.setNodeRef}
       {...draggable.listeners}
       {...draggable.attributes}
-      className="flex justify-start"
+      className="flex justify-start w-fit"
     >
       <div className="flex flex-row items-center">
         <Icon/> &nbsp;

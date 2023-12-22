@@ -17,7 +17,7 @@ const type: ElementType = "StoreLogoField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "Placeholder Logo",
+  value: "upload logo",
   fontSize: FontSize[2],
   helperText: "This is logo of the store. It will be displayed atop every factory and hence, receipt",
   required: true,
@@ -117,7 +117,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           name="value"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Value</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -126,9 +125,9 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
                   }}
                 />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 Upload logo
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}

@@ -18,7 +18,7 @@ const type: ElementType = "StoreEmailField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "Placeholder Address",
+  value: "type in email address",
   fontSize: FontSize[2],
   helperText: "This is the email address for the store. It will be displayed atop every factory and hence, receipt",
   required: true,
@@ -118,7 +118,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           name="value"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Value</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -127,9 +126,9 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
                   }}
                 />
               </FormControl>
-              <FormDescription>
+              {/* <FormDescription>
                 This is email of the store. It will be displayed atop every factory and hence, receipt
-              </FormDescription>
+              </FormDescription> */}
               <FormMessage />
             </FormItem>
           )}
@@ -140,7 +139,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           name="fontSize"
           render={({ field }) => (
             <FormItem className="space-y-3">
-              <FormLabel>Choose font size...</FormLabel>
+              <FormLabel className="font-normal">Choose font size...</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}

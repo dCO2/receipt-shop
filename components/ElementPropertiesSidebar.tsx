@@ -9,15 +9,15 @@ function ElementPropertiesSidebar() {
 
   const PropertiesComponent = FactoryElements[focusedElement?.type].propertiesComponent;
   return (
-    <div>
-      <div>
-        <p className="text-sm text-foreground/70">Element Properties</p>
+    <div className="flex flex-col gap-0 p-2">
+      <div className="flex justify-between items-center">
+        <p className="">Element Properties</p>
         <Button
           size={"icon"}
           variant={"ghost"}
           onClick={() => {setFocusedElement(null);}}
         >
-          close
+          X
         </Button>
       </div>
       <PropertiesComponent elementInstance={focusedElement}/>
@@ -25,4 +25,4 @@ function ElementPropertiesSidebar() {
   );
 }
 
-export default ElementPropertiesSidebar
+export default ElementPropertiesSidebar;

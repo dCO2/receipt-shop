@@ -29,25 +29,23 @@ async function FactoryDetailPage(
 
   return(
     <>
-      <div className="py-10 border-b border-muted">
-        <div className="flex justify-between container">
-          <h1 className="text-4xl font-bold truncate">{factory.name}</h1>
+      <div className="sm:flex sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex pt-4 items-center border-b border-muted container sm:w-fit">
+          <h1 className="text-4xl font-bold truncate">{factory.name}</h1>&nbsp;
           <VisitFactoryBtn shareUrl={factory.shareURL} />
         </div>
-      </div>
-      <div className="py-4 border-b border-muted">
-        <div className="container flex gap-2 items-center justify-between">
+        <div className="container flex pb-4 pt-2 border-b border-muted gap-2 items-center justify-between sm:w-fit sm:pt-4 sm:pb-0">
           <FactoryLinkShare shareUrl={factory.shareURL} />
         </div>
       </div>
-      <div className="w-full pt-8 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 container">
+      <div className="flex flex-wrap justify-center pt-8 gap-4 mb-8 lg:flex-row">
         <StatsCard
           title="Total Visits"
           value={visits.toLocaleString() || ""}
           icon={<EyeIcon className="h-7 w-7"/>}
           helperText="All time receipts factory visits"
           loading={false}
-          className=""
+          color=""
         />
         
         <StatsCard
@@ -56,7 +54,7 @@ async function FactoryDetailPage(
           icon={<EyeIcon className="h-7 w-7"/>}
           helperText="All time receipt factory prints"
           loading={false}
-          className=""
+          color=""
         />
 
         <StatsCard
@@ -65,7 +63,7 @@ async function FactoryDetailPage(
           icon={<EyeIcon className="h-7 w-7"/>}
           helperText="Visits that result in receipt prints"
           loading={false}
-          className=""
+          color=""
         />
 
         <StatsCard
@@ -74,7 +72,7 @@ async function FactoryDetailPage(
           icon={<EyeIcon className="h-7 w-7"/>}
           helperText="Visits without interaction"
           loading={false}
-          className=""
+          color=""
         />
       </div>
 

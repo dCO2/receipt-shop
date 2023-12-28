@@ -22,20 +22,22 @@ function MenuGuide() {
         <DialogFooter>
         </DialogFooter> */}
         <h3>About</h3>
-        <p>placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
+        <p>
+          <div className="text-sm text-muted-foreground">
+            Receit-Shop: Make factories to print receipts!
+          </div>
         </p>
         <hr/>
         <h3>How to Use</h3>
-        <p>placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
-        placeholderrrrrrrrrrrrrrrrrrrrrrrrrrrr
+        <p>
+          <div className="text-sm">
+            <ol className="list-outside list-decimal pl-5 text-muted-foreground">
+              <li>Create an account. (Authentication is powered by Clerk. You're assured secure data)</li>
+              <li>Build how your receipt should look. This is called a factory. Drag-and-drop necessary features into your factory</li>
+              <li>Publish your factory</li>
+              <li>Share the link to your published factory so anyone can print a receipt</li>
+            </ol>
+          </div>
         </p>
       </DialogContent>
     </Dialog>

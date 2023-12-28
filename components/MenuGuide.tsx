@@ -24,7 +24,7 @@ function MenuGuide() {
         <h3>About</h3>
         <p>
           <div className="text-sm text-muted-foreground">
-            Receit-Shop: Make factories to print receipts!
+            Make factories to print receipts!
           </div>
         </p>
         <hr/>

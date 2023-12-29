@@ -12,7 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-
+import { RxLetterCaseToggle } from "react-icons/rx";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 const type: ElementType = "StoreEmailField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
@@ -104,6 +105,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   };
 
   return(
+    <div>
     <Form {...form}>
       <form
         onBlur={form.handleSubmit(applyChanges)}
@@ -138,54 +140,47 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           control={form.control}
           name="fontSize"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel className="font-normal">Choose font size...</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-row space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="1" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-xs
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="2" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-sm
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="3" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-base
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="4" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-lg
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Tabs
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              className="flex flex-row space-y-1 list-image-none"
+            >
+              <TabsList className="border">
+                <TabsTrigger value="1">
+                  <RxLetterCaseToggle className="w-4 h-4" />
+                </TabsTrigger>
+                <TabsTrigger value="2">
+                  <RxLetterCaseToggle className="w-6 h-6" />
+                </TabsTrigger>
+                <TabsTrigger value="3">
+                  <RxLetterCaseToggle className="w-8 h-8" />
+                </TabsTrigger>
+                <TabsTrigger value="4">
+                  <RxLetterCaseToggle className="w-10 h-10" />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           )}
         />
+
+        {/* <Tabs
+          className="flex flex-row space-y-1 list-image-none"
+        >
+          <TabsList className="border">
+            <TabsTrigger value="1">
+              <RxLetterCaseToggle className="w-4 h-4" />
+            </TabsTrigger>
+          </TabsList>
+        </Tabs> */}
+        {/* <FormField
+          control={form.control}
+          name="fontSize"
+          render={({ field }) => (
+          )}
+        /> */}
       </form>
     </Form>
+    </div>
   );
 }
 

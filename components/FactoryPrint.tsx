@@ -71,7 +71,6 @@ function FactoryPrint({factoryUrl, factoryContent}:
       });
     }
 
-    console.log("FACTORY VALUES", factoryValues.current);
   };
 
   if(printed){

@@ -140,7 +140,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
   const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
-  console.log(fontSize);
   return (
     <div>
       <Label>

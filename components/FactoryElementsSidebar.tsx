@@ -9,10 +9,11 @@ function FactoryElementsSidebar() {
       <div className="flex flex-col gap-1">
         <SidebarBtnElement factoryElement={FactoryElements.StoreLogoField} />
         <SidebarBtnElement factoryElement={FactoryElements.StoreEmailField} />
-        <SidebarBtnElement factoryElement={FactoryElements.TextField} />
         <SidebarBtnElement factoryElement={FactoryElements.StoreNameField} />
         <SidebarBtnElement factoryElement={FactoryElements.StoreAddressField} />
         <SidebarBtnElement factoryElement={FactoryElements.StoreTelField} />
+        <SidebarBtnElement factoryElement={FactoryElements.InventoryField} />
+        <SidebarBtnElement factoryElement={FactoryElements.InvoiceTableField} />
       </div>
     </div>
   )

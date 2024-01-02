@@ -12,17 +12,18 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { RxLetterCaseToggle } from "react-icons/rx";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
-
-const type: ElementType = "StoreAddressField";
+const type: ElementType = "InvoiceTableField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "Placeholder Address",
+  value: "",
   fontSize: FontSize[2],
-  helperText: "This is the address for the store. It will be displayed atop every factory and hence, receipt",
+  helperText: "user's purchases appear here",
   required: true,
-  placeHolder: "Type in address for store..."
+  placeHolder: "insert table here"
 }
 
 const propertiesSchema = z.object({
@@ -30,7 +31,7 @@ const propertiesSchema = z.object({
   fontSize: z.string(),
 });
 
-export const StoreAddressFieldFactoryElement: FactoryElements = {
+export const InvoiceTableFieldFactoryElement: FactoryElements = {
   type,
   construct: (id: string) => ({
     id,
@@ -39,7 +40,7 @@ export const StoreAddressFieldFactoryElement: FactoryElements = {
   }),
   editorBtnElement: {
     icon: MdTextFields,
-    label: "StoreAddress Field"
+    label: "InvoiceTable Field"
   },
   editorComponent: EditorComponent,
   factoryComponent: factoryComponent,
@@ -72,6 +73,7 @@ function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}
     <div>
       <Label>
         {value}
+        ahashah
       </Label>
     </div>
   );
@@ -104,6 +106,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   };
 
   return(
+    <div>
     <Form {...form}>
       <form
         onBlur={form.handleSubmit(applyChanges)}
@@ -112,81 +115,9 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
         }}
         className="space-y-3"
       >
-
-        <FormField
-          control={form.control}
-          name="value"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Value</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") e.currentTarget.blur();
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                This is name of the store. It will be displayed atop every factory and hence, receipt
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="fontSize"
-          render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Choose font size...</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-row space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="1" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-xs
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="2" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-sm
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="3" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-base
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="4" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-lg
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </form>
     </Form>
+    </div>
   );
 }
 
@@ -195,10 +126,6 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
   const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   return (
     <div>
-      <Label>
-        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
-        {required && "*"}
-      </Label>
       {helperText && <p className="text-sm italic">{helperText}</p>}
     </div>
   );

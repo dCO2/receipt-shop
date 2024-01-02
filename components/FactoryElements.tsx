@@ -5,9 +5,12 @@ import { StoreTelFieldFactoryElement } from "./receiptfields/StoreTelField";
 import { StoreAddressFieldFactoryElement } from "./receiptfields/StoreAddressField";
 import { StoreLogoFieldFactoryElement } from "./receiptfields/StoreLogo";
 import { StoreEmailFieldFactoryElement } from "./receiptfields/StoreEmailField";
+import { InventoryFieldFactoryElement } from "./receiptfields/InventoryField";
+import { InvoiceTableFieldFactoryElement } from "./receiptfields/InvoiceTableField";
 
 export type ElementType = "TextField" | "StoreNameField" | "StoreTelField" |
-                          "StoreAddressField" | "StoreLogoField" | "StoreEmailField";
+                          "StoreAddressField" | "StoreLogoField" | "StoreEmailField" |
+                          "InventoryField" | "InvoiceTableField";
 
 export type printFunction = (key: string, value: string) => void;
 
@@ -54,4 +57,6 @@ export const FactoryElements: FactoryElementType = {
   StoreAddressField: StoreAddressFieldFactoryElement,
   StoreLogoField: StoreLogoFieldFactoryElement,
   StoreEmailField: StoreEmailFieldFactoryElement,
+  InventoryField: InventoryFieldFactoryElement,
+  InvoiceTableField: InvoiceTableFieldFactoryElement,
 };

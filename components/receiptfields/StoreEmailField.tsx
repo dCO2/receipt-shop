@@ -142,21 +142,23 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           render={({ field }) => (
             <Tabs
               onValueChange={field.onChange}
+              // onValueChange={() => (form.handleSubmit(applyChanges))}
+              
               defaultValue={field.value}
               className="flex flex-row space-y-1 list-image-none"
             >
-              <TabsList className="border">
+              <TabsList>
                 <TabsTrigger value="1">
-                  <RxLetterCaseToggle className="w-4 h-4" />
+                  <RxLetterCaseToggle className="w-3 h-3" />
                 </TabsTrigger>
                 <TabsTrigger value="2">
-                  <RxLetterCaseToggle className="w-6 h-6" />
+                  <RxLetterCaseToggle className="w-4 h-4" />
                 </TabsTrigger>
                 <TabsTrigger value="3">
-                  <RxLetterCaseToggle className="w-8 h-8" />
+                  <RxLetterCaseToggle className="w-5 h-5" />
                 </TabsTrigger>
                 <TabsTrigger value="4">
-                  <RxLetterCaseToggle className="w-10 h-10" />
+                  <RxLetterCaseToggle className="w-6 h-6" />
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -187,7 +189,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
   const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
-  console.log(fontSize);
   return (
     <div>
       <Label>

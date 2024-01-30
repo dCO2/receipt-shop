@@ -16,7 +16,8 @@ function EditorArea() {
     },
   });
 
-  // handle element drag events using dnd-kit
+  // handle element drag events using dnd-kit;
+  // if the dragged item is what we need, then the necessary action is run
   useDndMonitor({
     onDragEnd: (event: DragEndEvent) => {
       const { active, over } = event;
@@ -40,6 +41,8 @@ function EditorArea() {
         className="w-full"
         onClick={() => { if(focusedElement) setFocusedElement(null)}}
       >
+        {/* the corresponding UI content in the EditorArea is displayed for each of the various states
+        (such as when the droppable isOver, !isOver, etc.) */}
         <div 
           ref={droppable.setNodeRef}
           className={cn(

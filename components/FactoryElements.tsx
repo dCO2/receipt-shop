@@ -46,7 +46,7 @@ export type FactoryElementInstance = {
   extraAttributes?: Record<string, any>;
 }
 
-type FactoryElementType = {
+export type FactoryElementType = {
   [key in ElementType]: FactoryElements
 }
 

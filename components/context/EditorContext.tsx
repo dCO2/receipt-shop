@@ -1,12 +1,14 @@
 "use client";
 import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
-import { FactoryElementInstance } from "../FactoryElements";
+import { FactoryElementInstance, FactoryElements, FactoryElementType } from "../FactoryElements";
 
 // type for EditorArea's context data;
 // EditorArea should have a list of factory elements;
 // plus actions on those elements.
 type EditorContextType = {
   elements: FactoryElementInstance[];
+  elementsPalette: FactoryElementType;
+
   addElement: (index: number, element: FactoryElementInstance) => void;
   removeElement: (id: string) => void;
   // re-add elements to the editor area once the page is saved / refreshed
@@ -24,6 +26,8 @@ export const EditorContext = createContext<EditorContextType | null>(null);
 export default function EditorContextProvider({children} : {children: ReactNode;}){
   // EditorArea's context data
   const [elements, setElements] = useState<FactoryElementInstance[]>([]);
+  const [elementsPalette, setElementsPalette] = useState<FactoryElementType>(FactoryElements);
+
   const [focusedElement, setFocusedElement] = useState<FactoryElementInstance | null>(null);
 
   // EditorArea's context actions
@@ -32,6 +36,14 @@ export default function EditorContextProvider({children} : {children: ReactNode;
       const newElements = [...prev];
       newElements.splice(index, 0, element);
       return newElements;
+    });
+
+    setElementsPalette((prev) => {
+
+      const newElementsPalette = {...prev};
+      delete newElementsPalette[element.type];
+
+      return newElementsPalette;
     });
   };
 
@@ -50,6 +62,7 @@ export default function EditorContextProvider({children} : {children: ReactNode;
     <EditorContext.Provider
       value={{
         elements,
+        elementsPalette,
         focusedElement,
         addElement,
         removeElement,

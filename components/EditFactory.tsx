@@ -13,6 +13,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import { toast } from "./ui/use-toast";
+import Draggables from "./Draggables";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
   const {setElements} = useEditor();
@@ -91,6 +92,15 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
         </nav>
         <div>
           <EditorArea/>
+        </div>
+        <div>
+          {/* intent: to test draggable feature */}
+          <Draggables
+            key={3456}
+            id={3456}
+            pos={{x:100,y:100}}
+            content={"faaer"}
+          />
         </div>
       </main>
       <DragOverlayWrapper/>

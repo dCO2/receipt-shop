@@ -12,6 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+// import { Draggables } from "../Draggables";
+import Draggables from "../Draggables";
 
 
 const type: ElementType = "StoreAddressField";
@@ -194,12 +196,20 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
   const element = elementInstance as CustomInstance;
   const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   return (
-    <div>
+    <div
+    >
       <Label>
         <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
         {required && "*"}
       </Label>
-      {helperText && <p className="text-sm italic">{helperText}</p>}
+      
+      <Draggables
+        key={3456}
+        id={3456}
+        pos={{x:100,y:100}}
+        content={"faaer"}
+      />
+      {/* {helperText && <p className="text-sm italic">{helperText}</p>} */}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import useEditor from './hooks/useEditor';
 import { ElementType, FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { idGenerator } from '@/lib/idGenerator';
+import Draggables from './Draggables';
 
 function EditorArea() {
   const { elements, addElement, focusedElement, setFocusedElement } = useEditor();
@@ -46,7 +47,7 @@ function EditorArea() {
         <div 
           ref={droppable.setNodeRef}
           className={cn(
-            "max-w-[400px] h-full flex flex-col flex-grow items-center justify-start m-auto flex-1 overflow-y-auto",
+            "max-w-[400px] bg-accent/40 rounded-md h-full flex flex-col flex-grow items-center justify-start m-auto flex-1 overflow-y-auto",
             droppable.isOver && "ring-2 ring-primary/20")}
         >
           {!droppable.isOver && (elements.length==0) &&
@@ -62,7 +63,15 @@ function EditorArea() {
             <div>
               {
                 elements.map((element) =>(
-                  <EditorElementWrapper key={element.id} element={element}/>
+                  // <EditorElementWrapper key={element.id} element={element}/>
+                  
+                  /* intent: to test draggable feature */
+                  <Draggables
+                    key={element.id}
+                    id={3456}
+                    pos={{x:100,y:100}}
+                    content={"faaer"}
+                  />
                 ))
               }
             </div>
@@ -100,7 +109,7 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
 
   return (
     <div 
-      className="relative h-[80px] flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
+      className="relative h-fit flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
       onClick={(e) => {
         e.stopPropagation();
         setFocusedElement(element);
@@ -108,11 +117,19 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
     >
       <div ref={topHalf.setNodeRef} className="absolute w-full h-1/2 rounded-t-md"/>
       <div ref={bottomHalf.setNodeRef} className="absolute w-full bottom-0 h-1/2 rounded-b-md"/>
-      <div className="flex w-full h-[80px] items-center rounded-md bg-accent/40 px-2 py-2 pointer-events-none">
+      <div
+        className="flex w-full h-fit items-center rounded-md bg-accent/40 px-2 py-2 pointer-events-none">
         <EditorElement elementInstance={element}/>  
       </div>
     </div>
   );
 }
+
+///////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////////////////////////////////
+
 
 export default EditorArea

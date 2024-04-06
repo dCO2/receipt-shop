@@ -6,7 +6,6 @@ import { cn } from '@/lib/utils';
 import useEditor from './hooks/useEditor';
 import { ElementType, FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { idGenerator } from '@/lib/idGenerator';
-import Draggables from './Draggables';
 
 function EditorArea() {
   const { elements, addElement, focusedElement, setFocusedElement } = useEditor();
@@ -60,18 +59,10 @@ function EditorArea() {
             </div>
           }
           {(elements.length>0) &&
-            <div>
+            <div className=''>
               {
                 elements.map((element) =>(
-                  // <EditorElementWrapper key={element.id} element={element}/>
-                  
-                  /* intent: to test draggable feature */
-                  <Draggables
-                    key={element.id}
-                    id={3456}
-                    pos={{x:100,y:100}}
-                    content={"faaer"}
-                  />
+                  <EditorElementWrapper key={element.id} element={element}/>
                 ))
               }
             </div>
@@ -108,7 +99,14 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
   const EditorElement = FactoryElements[element.type].editorComponent;
 
   return (
-    <div 
+    <div
+      className="relative overscroll-none overscroll-x-contain text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
+      onClick={(e) => {
+        e.stopPropagation();
+        setFocusedElement(element);
+      }}
+    >
+    {/* <div 
       className="relative h-fit flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
       onClick={(e) => {
         e.stopPropagation();
@@ -121,15 +119,10 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
         className="flex w-full h-fit items-center rounded-md bg-accent/40 px-2 py-2 pointer-events-none">
         <EditorElement elementInstance={element}/>  
       </div>
+    </div> */}
+    <EditorElement elementInstance={element}/>  
     </div>
   );
 }
-
-///////////////////////////////////////////////////////////////////
-
-
-
-///////////////////////////////////////////////////////////////////
-
 
 export default EditorArea

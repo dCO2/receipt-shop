@@ -7,14 +7,19 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 // import { Draggables } from "../Draggables";
 import Draggables from "../Draggables";
-
+import OverflowWrapper from "../OverflowWrapper/OverflowWrapper";
+import {
+  restrictToWindowEdges,
+  restrictToParentElement,
+  restrictToFirstScrollableAncestor,
+} from '@dnd-kit/modifiers';
 
 const type: ElementType = "StoreAddressField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
@@ -192,9 +197,15 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   );
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
-  const element = elementInstance as CustomInstance;
-  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+interface InnerLabelProps {
+  value: string;
+  required: boolean;
+  fontSize: string;
+}
+
+const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {value: string, required: boolean, fontSize: string}) => {
+  // const element = elementInstance as CustomInstance;
+  // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   return (
     <div
     >
@@ -202,13 +213,35 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
         <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
         {required && "*"}
       </Label>
-      
+    </div>
+  )
+}
+
+function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+  const element = elementInstance as CustomInstance;
+  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+  return (
+    <div
+    >
+      {/* <Label>
+        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
+        {required && "*"}
+      </Label> */}
+      {/* <OverflowWrapper> */}
       <Draggables
+        modifiers={[restrictToFirstScrollableAncestor]}
         key={3456}
         id={3456}
         pos={{x:100,y:100}}
         content={"faaer"}
-      />
+        value={value}
+        required={required}
+        fontSize={fontSize}
+        
+      >
+        {InnerLabel}
+      </Draggables>
+      {/* </OverflowWrapper> */}
       {/* {helperText && <p className="text-sm italic">{helperText}</p>} */}
     </div>
   );

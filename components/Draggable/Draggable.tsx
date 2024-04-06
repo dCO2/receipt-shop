@@ -11,6 +11,12 @@ export enum Axis {
   Horizontal,
 }
 
+interface InnerLabelProps {
+  value: string;
+  required: boolean;
+  fontSize: string;
+}
+
 interface Props {
   axis?: Axis;
   dragOverlay?: boolean;
@@ -23,9 +29,13 @@ interface Props {
   transform?: Transform | null;
   content?: string;
   id: number;
+  value: string; 
+  required: boolean;
+  fontSize: string;
+  children: React.FC<InnerLabelProps>;
 }
 
-export const Draggable = forwardRef<HTMLButtonElement, Props>(
+export const Draggable = forwardRef<HTMLDivElement, Props>(
   function Draggable(
     {
       axis,
@@ -39,54 +49,50 @@ export const Draggable = forwardRef<HTMLButtonElement, Props>(
       buttonStyle,
       content,
       id,
+      value,
+      required,
+      fontSize,
+      children,
       ...props
     },
     ref
   ) {
+    const InnerLabel = children
     
     return (
       <div className='border border-solid border-red-400'>
-      <div
-        className={classNames('border border-solid border-red-400',
-          styles.Draggable,
-          dragOverlay && styles.dragOverlay,
-          dragging && styles.dragging,
-          handle && styles.handle
-        )}
-        style={
-          {
-            ...style,
-            '--translate-x': `${transform?.x ?? 0}px`,
-            '--translate-y': `${transform?.y ?? 0}px`,
-          } as React.CSSProperties
-        }
-      >
-        <button
-          {...props}
-          aria-label="Draggable"
-          data-cypress="draggable-item"
-          {...(handle ? {} : listeners)}
-          tabIndex={handle ? -1 : undefined}
-          ref={ref}
-          style={buttonStyle}
+        <div
+          className={classNames('border border-solid border-red-400',
+            styles.Draggable,
+            dragOverlay && styles.dragOverlay,
+            dragging && styles.dragging,
+            handle && styles.handle
+          )}
+          style={
+            {
+              ...style,
+              '--translate-x': `${transform?.x ?? 0}px`,
+              '--translate-y': `${transform?.y ?? 0}px`,
+            } as React.CSSProperties
+          }
         >
-          <p className="text-white">holla! this should be a text frame...</p>
-        </button>
-      </div>
-      <div 
-        className={classNames('border border-solid border-green-400',
-          styles.Draggable,
-          styles.textframe
-        )}
-              style={
-                {
-                  ...style,
-                  '--translate-x': `${transform?.x !== undefined ? 0 + transform?.x : 0}px`,
-                  '--translate-y': `${transform?.y !== undefined ? 54 + transform?.y : 54}px`,
-                } as React.CSSProperties
-              }
-        >
-      </div>
+          <div
+            {...props}
+            aria-label="Draggable"
+            data-cypress="draggable-item"
+            {...(handle ? {} : listeners)}
+            tabIndex={handle ? -1 : undefined}
+            ref={ref}
+            style={buttonStyle}
+          >
+            <InnerLabel
+              value={value}
+              required={required}
+              fontSize={fontSize}
+            />
+            
+          </div>
+        </div>
       </div>
     );
   }

@@ -26,7 +26,7 @@ function SaveFactoryBtn({id}: {id: number}) {
   }
   return (
     <Button variant={"outline"} disabled={loading} onClick={() => {startTransition(updateFactoryContent);}} className="gap-2">
-      <span>+</span>
+      <span>S</span>
       <span className="hidden lg:visible">Save</span>
       {loading && <span>spinnin</span>}
     </Button>

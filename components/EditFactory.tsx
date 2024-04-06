@@ -95,12 +95,12 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
         </div>
         <div>
           {/* intent: to test draggable feature */}
-          <Draggables
+          {/* <Draggables
             key={3456}
             id={3456}
             pos={{x:100,y:100}}
             content={"faaer"}
-          />
+          /> */}
         </div>
       </main>
       <DragOverlayWrapper/>

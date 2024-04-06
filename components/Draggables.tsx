@@ -23,6 +23,12 @@ const defaultCoordinates = {
 type DraggablesType = React.ForwardRefExoticComponent<Props & React.RefAttributes<HTMLButtonElement>>;
 type DraggablesArrType = DraggablesType[];
 
+interface InnerLabelProps {
+  value: string;
+  required: boolean;
+  fontSize: string;
+}
+
 interface Props {
   activationConstraint?: PointerActivationConstraint;
   // axis?: Axis;
@@ -34,6 +40,10 @@ interface Props {
   pos?: Coordinates | (() => Coordinates);
   content?: string;
   id: number;
+  value: string; 
+  required: boolean;
+  fontSize: string;
+  children: React.FC<InnerLabelProps>;
 }
 
 function Draggables({
@@ -47,6 +57,10 @@ function Draggables({
   pos=defaultCoordinates,
   content="defauulttext",
   id,
+  value,
+  required,
+  fontSize,
+  children,
 }: Props) {
   const [{x, y}, setCoordinates] = useState<Coordinates>(pos);
   const mouseSensor = useSensor(MouseSensor, {
@@ -82,7 +96,13 @@ function Draggables({
           buttonStyle={buttonStyle}
           id={id}
           content={content}
-        />
+          value={value}
+          required={required}
+          fontSize={fontSize}
+          
+        >
+          {children}
+        </DraggableItem>
       </Wrapper>
     </DndContext>
   );
@@ -98,6 +118,10 @@ interface DraggableItemProps {
   left?: number;
   content?: string;
   id: number;
+  value: string; 
+  required: boolean;
+  fontSize: string;
+  children: React.FC<InnerLabelProps>;
 }
 
 function DraggableItem({
@@ -110,6 +134,10 @@ function DraggableItem({
   buttonStyle,
   content,
   id,
+  value,
+  required,
+  fontSize,
+  children,
 }: DraggableItemProps) {
   const {attributes, isDragging, listeners, setNodeRef, transform} =
     useDraggable({
@@ -131,7 +159,13 @@ function DraggableItem({
       id={id}
       content={content}
       {...attributes}
-    />
+      value={value}
+      required={required}
+      fontSize={fontSize}
+      
+    >
+      {children}
+    </Draggable>
     </div>
   );
 }

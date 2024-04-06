@@ -9,6 +9,10 @@
   background-color: rgb(228 228 231 / var(--tw-bg-opacity));
 } */
 
+::-webkit-scrollbar { 
+  display: none; 
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

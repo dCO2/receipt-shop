@@ -14,6 +14,7 @@ import type {Coordinates} from '@dnd-kit/utilities';
 
 import Wrapper from './Wrapper/Wrapper';
 import { Draggable } from './Draggable';
+import { FactoryElementInstance } from './FactoryElements';
 
 const defaultCoordinates = {
   x: 0,
@@ -22,6 +23,10 @@ const defaultCoordinates = {
 
 type DraggablesType = React.ForwardRefExoticComponent<Props & React.RefAttributes<HTMLButtonElement>>;
 type DraggablesArrType = DraggablesType[];
+
+// type CustomInstance = FactoryElementInstance & {
+//   extraAttributes: typeof extraAttributes;
+// };
 
 interface InnerLabelProps {
   value: string;
@@ -40,9 +45,12 @@ interface Props {
   pos?: Coordinates | (() => Coordinates);
   content?: string;
   id: number;
-  value: string; 
-  required: boolean;
-  fontSize: string;
+  // value: string; 
+  // required: boolean;
+  // fontSize: string;
+  // children: React.FC<InnerLabelProps>;
+
+  element: FactoryElementInstance;
   children: React.FC<InnerLabelProps>;
 }
 
@@ -57,9 +65,10 @@ function Draggables({
   pos=defaultCoordinates,
   content="defauulttext",
   id,
-  value,
-  required,
-  fontSize,
+  // value,
+  // required,
+  // fontSize,
+  element,
   children,
 }: Props) {
   const [{x, y}, setCoordinates] = useState<Coordinates>(pos);
@@ -96,9 +105,10 @@ function Draggables({
           buttonStyle={buttonStyle}
           id={id}
           content={content}
-          value={value}
-          required={required}
-          fontSize={fontSize}
+        // value={value}
+        // required={required}
+        // fontSize={fontSize}
+        element={element}
           
         >
           {children}
@@ -118,9 +128,10 @@ interface DraggableItemProps {
   left?: number;
   content?: string;
   id: number;
-  value: string; 
-  required: boolean;
-  fontSize: string;
+  // value: string; 
+  // required: boolean;
+  // fontSize: string;
+  element: FactoryElementInstance;
   children: React.FC<InnerLabelProps>;
 }
 
@@ -134,9 +145,10 @@ function DraggableItem({
   buttonStyle,
   content,
   id,
-  value,
-  required,
-  fontSize,
+  // value,
+  // required,
+  // fontSize,
+  element,
   children,
 }: DraggableItemProps) {
   const {attributes, isDragging, listeners, setNodeRef, transform} =
@@ -159,10 +171,10 @@ function DraggableItem({
       id={id}
       content={content}
       {...attributes}
-      value={value}
-      required={required}
-      fontSize={fontSize}
-      
+      // value={value}
+      // required={required}
+      // fontSize={fontSize}
+      element={element}
     >
       {children}
     </Draggable>

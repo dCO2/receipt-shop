@@ -12,12 +12,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-// import { Draggables } from "../Draggables";
 import Draggables from "../Draggables";
-import OverflowWrapper from "../OverflowWrapper/OverflowWrapper";
 import {
-  restrictToWindowEdges,
-  restrictToParentElement,
   restrictToFirstScrollableAncestor,
 } from '@dnd-kit/modifiers';
 
@@ -204,8 +200,6 @@ interface InnerLabelProps {
 }
 
 const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {value: string, required: boolean, fontSize: string}) => {
-  // const element = elementInstance as CustomInstance;
-  // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   return (
     <div
     >
@@ -219,9 +213,14 @@ const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {val
 
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
-  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+  // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+  // const { focusedElement, setFocusedElement } = useEditor();
   return (
     <div
+      // onClick={(e) => {
+      //   e.stopPropagation();
+      //   setFocusedElement(element);
+      // }}
     >
       {/* <Label>
         <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
@@ -234,10 +233,11 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
         id={3456}
         pos={{x:100,y:100}}
         content={"faaer"}
-        value={value}
-        required={required}
-        fontSize={fontSize}
-        
+        // value={value}
+        // required={required}
+        // fontSize={fontSize}
+        element={element}
+        // extraAttributes={extraAttributes}
       >
         {InnerLabel}
       </Draggables>

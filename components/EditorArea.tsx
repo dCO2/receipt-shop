@@ -101,10 +101,10 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
   return (
     <div
       className="relative overscroll-none overscroll-x-contain text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
-      onClick={(e) => {
-        e.stopPropagation();
-        setFocusedElement(element);
-      }}
+      // onClick={(e) => {
+      //   e.stopPropagation();
+      //   setFocusedElement(element);
+      // }}
     >
     {/* <div 
       className="relative h-fit flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
@@ -120,7 +120,8 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
         <EditorElement elementInstance={element}/>  
       </div>
     </div> */}
-    <EditorElement elementInstance={element}/>  
+    <EditorElement elementInstance={element}
+    />  
     </div>
   );
 }

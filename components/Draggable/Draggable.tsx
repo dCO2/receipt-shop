@@ -4,6 +4,8 @@ import type {DraggableSyntheticListeners} from '@dnd-kit/core';
 import type {Transform} from '@dnd-kit/utilities';
 
 import styles from './Draggable.module.css';
+import { FactoryElementInstance } from '../FactoryElements';
+import useEditor from '../hooks/useEditor';
 
 export enum Axis {
   All,
@@ -29,10 +31,14 @@ interface Props {
   transform?: Transform | null;
   content?: string;
   id: number;
-  value: string; 
-  required: boolean;
-  fontSize: string;
+  // value: string; 
+  // required: boolean;
+  // fontSize: string;
+  // children: React.FC<InnerLabelProps>;
+
+  element: FactoryElementInstance;
   children: React.FC<InnerLabelProps>;
+
 }
 
 export const Draggable = forwardRef<HTMLDivElement, Props>(
@@ -49,15 +55,19 @@ export const Draggable = forwardRef<HTMLDivElement, Props>(
       buttonStyle,
       content,
       id,
-      value,
-      required,
-      fontSize,
+      // value,
+      // required,
+      // fontSize,
+      element,
       children,
       ...props
     },
     ref
   ) {
     const InnerLabel = children
+    const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+    const { focusedElement, setFocusedElement } = useEditor();
+
     
     return (
       <div className='border border-solid border-red-400'>
@@ -84,8 +94,17 @@ export const Draggable = forwardRef<HTMLDivElement, Props>(
             tabIndex={handle ? -1 : undefined}
             ref={ref}
             style={buttonStyle}
+
+            onClick={(e) => {
+              e.stopPropagation();
+              setFocusedElement(element);
+            }}
           >
+
             <InnerLabel
+              // value={value}
+              // required={required}
+              // fontSize={fontSize}
               value={value}
               required={required}
               fontSize={fontSize}

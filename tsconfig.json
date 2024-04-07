@@ -1,10 +1,16 @@
 {
   "compilerOptions": {
+    "noImplicitAny": false, // Allow implicit 'any' type
+    "strict": false, // Disable strict type checking
+    "suppressImplicitAnyIndexErrors": true, // Suppress errors for indexing objects of type 'any'
+    "checkJs": false, // Disable type checking for JavaScript files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in file names
+
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    // "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",

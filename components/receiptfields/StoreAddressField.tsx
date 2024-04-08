@@ -21,7 +21,7 @@ const type: ElementType = "StoreAddressField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "Placeholder Address",
+  value: "Input Store Address",
   fontSize: FontSize[2],
   helperText: "This is the address for the store. It will be displayed atop every factory and hence, receipt",
   required: true,
@@ -204,7 +204,7 @@ const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {val
     <div
     >
       <Label>
-        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
+        <span className={cn(FontSize[parseInt(fontSize)], "whitespace-nowrap")}>{value}</span>
         {required && "*"}
       </Label>
     </div>
@@ -231,7 +231,7 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
         modifiers={[restrictToFirstScrollableAncestor]}
         key={3456}
         id={3456}
-        pos={{x:100,y:100}}
+        pos={{x:0,y:0}}
         content={"faaer"}
         // value={value}
         // required={required}

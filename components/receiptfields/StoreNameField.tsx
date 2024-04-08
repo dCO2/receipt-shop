@@ -12,13 +12,16 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-
+import Draggables from "../Draggables";
+import {
+  restrictToFirstScrollableAncestor,
+} from '@dnd-kit/modifiers';
 
 const type: ElementType = "StoreNameField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "Placeholder Store",
+  value: "Input Store Name",
   fontSize: FontSize[2],
   helperText: "This is name of the store. It will be displayed atop every factory and hence, receipt",
   required: true,
@@ -190,16 +193,43 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   );
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
-  const element = elementInstance as CustomInstance;
-  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+interface InnerLabelProps {
+  value: string;
+  required: boolean;
+  fontSize: string;
+}
+
+const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {value: string, required: boolean, fontSize: string}) => {
   return (
-    <div>
+    <div
+    >
       <Label>
-        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
+        <span className={cn(FontSize[parseInt(fontSize)], "whitespace-nowrap")}>{value}</span>
         {required && "*"}
       </Label>
-      {helperText && <p className="text-sm italic">{helperText}</p>}
+    </div>
+  )
+}
+
+function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+  const element = elementInstance as CustomInstance;
+  return (
+    <div
+    >
+      <Draggables
+        modifiers={[restrictToFirstScrollableAncestor]}
+        key={3456}
+        id={3456}
+        pos={{x:0,y:0}}
+        content={"faaer"}
+        // value={value}
+        // required={required}
+        // fontSize={fontSize}
+        element={element}
+        // extraAttributes={extraAttributes}
+      >
+        {InnerLabel}
+      </Draggables>
     </div>
   );
 }

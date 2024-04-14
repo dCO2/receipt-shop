@@ -50,6 +50,10 @@ export type FactoryElementType = {
   [key in ElementType]: FactoryElements
 }
 
+export type FactoryPaletteElementsType = {} | {
+  [key in ElementType]: FactoryElements
+}
+
 export const FactoryElements: FactoryElementType = {
   TextField: TextFieldFactoryElement,
   StoreNameField: StoreNameFieldFactoryElement,

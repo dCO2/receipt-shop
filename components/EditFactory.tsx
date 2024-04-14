@@ -13,15 +13,25 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import { toast } from "./ui/use-toast";
-import Draggables from "./Draggables";
+import { FactoryPaletteElementsType, FactoryElements } from "./FactoryElements";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
-  const {setElements} = useEditor();
+  const {setElements, setElementsPalette} = useEditor();
+  let arrOfPalleteEle: FactoryPaletteElementsType = {}
 
   useEffect(() => {
     const elements = JSON.parse(factory.content);
+    let allFelements = FactoryElements;
+    let strOfElements = elements.map(obj => obj['type']).filter(Boolean)
+
+    for(let key of Object.keys(allFelements)){
+      if(!(strOfElements.includes(String(key)))){
+        arrOfPalleteEle[key] = FactoryElements[key]
+      }
+    }
     setElements(elements);
-  }, [factory, setElements]);
+    setElementsPalette(arrOfPalleteEle);
+  }, [factory, setElements, setElementsPalette]);
 
   if(factory.published){
 

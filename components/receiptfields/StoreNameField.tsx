@@ -16,16 +16,19 @@ import Draggables from "../Draggables";
 import {
   restrictToFirstScrollableAncestor,
 } from '@dnd-kit/modifiers';
+import { Coordinates } from "@dnd-kit/core/dist/types";
 
 const type: ElementType = "StoreNameField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
+const draggableInitialPos: Coordinates = {x:0,y:0}
 
 const extraAttributes = {
   value: "Input Store Name",
   fontSize: FontSize[2],
   helperText: "This is name of the store. It will be displayed atop every factory and hence, receipt",
   required: true,
-  placeHolder: "Type in name of store..."
+  placeHolder: "Type in name of store...",
+  draggableInitialPos: draggableInitialPos
 }
 
 const propertiesSchema = z.object({
@@ -220,13 +223,12 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
         modifiers={[restrictToFirstScrollableAncestor]}
         key={3456}
         id={3456}
-        pos={{x:0,y:0}}
+        pos={element.extraAttributes.draggableInitialPos}
         content={"faaer"}
         // value={value}
         // required={required}
         // fontSize={fontSize}
         element={element}
-        // extraAttributes={extraAttributes}
       >
         {InnerLabel}
       </Draggables>

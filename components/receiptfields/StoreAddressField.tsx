@@ -16,21 +16,33 @@ import Draggables from "../Draggables";
 import {
   restrictToFirstScrollableAncestor,
 } from '@dnd-kit/modifiers';
+import { Coordinates } from "@dnd-kit/core/dist/types";
 
 const type: ElementType = "StoreAddressField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
+// const draggableInitialPos: {[key: string]: number} = {x:0,y:0}
+const draggableInitialPos: Coordinates = {x:0,y:0}
+
 
 const extraAttributes = {
   value: "Input Store Address",
   fontSize: FontSize[2],
+  // yaxj: "sdoivn",
   helperText: "This is the address for the store. It will be displayed atop every factory and hence, receipt",
   required: true,
-  placeHolder: "Type in address for store..."
+  placeHolder: "Type in address for store...",
+  draggableInitialPos: draggableInitialPos
 }
+
+const posSchema = z.object({
+  x: z.number(),
+  y: z.number(),
+})
 
 const propertiesSchema = z.object({
   value: z.string().min(5).max(50),
   fontSize: z.string(),
+  draggableInitialPos: posSchema,
 });
 
 export const StoreAddressFieldFactoryElement: FactoryElements = {
@@ -90,6 +102,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
     defaultValues: {
       value: element.extraAttributes.value,
       fontSize: element.extraAttributes.fontSize,
+      draggableInitialPos: element.extraAttributes.draggableInitialPos,
     }
   });
 
@@ -213,36 +226,22 @@ const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {val
 
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
+  console.log(element)
   // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   // const { focusedElement, setFocusedElement } = useEditor();
   return (
     <div
-      // onClick={(e) => {
-      //   e.stopPropagation();
-      //   setFocusedElement(element);
-      // }}
     >
-      {/* <Label>
-        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
-        {required && "*"}
-      </Label> */}
-      {/* <OverflowWrapper> */}
       <Draggables
         modifiers={[restrictToFirstScrollableAncestor]}
         key={3456}
         id={3456}
-        pos={{x:0,y:0}}
+        pos={element.extraAttributes.draggableInitialPos}
         content={"faaer"}
-        // value={value}
-        // required={required}
-        // fontSize={fontSize}
         element={element}
-        // extraAttributes={extraAttributes}
       >
         {InnerLabel}
       </Draggables>
-      {/* </OverflowWrapper> */}
-      {/* {helperText && <p className="text-sm italic">{helperText}</p>} */}
     </div>
   );
 }

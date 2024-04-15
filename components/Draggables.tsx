@@ -15,6 +15,7 @@ import type {Coordinates} from '@dnd-kit/utilities';
 import Wrapper from './Wrapper/Wrapper';
 import { Draggable } from './Draggable';
 import { FactoryElementInstance } from './FactoryElements';
+import useEditor from './hooks/useEditor';
 
 const defaultCoordinates = {
   x: 0,
@@ -80,17 +81,30 @@ function Draggables({
   });
   const keyboardSensor = useSensor(KeyboardSensor, {});
   const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
+  const {updateElement} = useEditor();
 
   return (
     <DndContext
       sensors={sensors}
       onDragEnd={({delta}) => {
         setCoordinates(({x, y}) => {
+          updateElement(element.id, {
+            ...element,
+            extraAttributes: {
+              ...element.extraAttributes,
+              ["draggableInitialPos"]: {x:x + delta.x, y: y + delta.y},
+            },
+          });
+          console.log(delta.x)
+          console.log("element",element)
           return {
             x: x + delta.x,
             y: y + delta.y,
           };
-        });
+        }
+        );
+        console.log("element",element)
+
       }}
       modifiers={modifiers}
     >

@@ -70,47 +70,45 @@ export const Draggable = forwardRef<HTMLDivElement, Props>(
 
     
     return (
-      <div className='border border-solid border-red-400'>
+      // this root div has a style of static, i.e., isn't moved when the draggable is moved
+      <div
+        className={classNames('border border-solid border-red-400',
+          styles.Draggable,
+          dragOverlay && styles.dragOverlay,
+          dragging && styles.dragging,
+          handle && styles.handle
+        )}
+        style={
+          {
+            ...style,
+            '--translate-x': `${transform?.x ?? 0}px`,
+            '--translate-y': `${transform?.y ?? 0}px`,
+          } as React.CSSProperties
+        }
+      >
         <div
-          className={classNames('border border-solid border-red-400',
-            styles.Draggable,
-            dragOverlay && styles.dragOverlay,
-            dragging && styles.dragging,
-            handle && styles.handle
-          )}
-          style={
-            {
-              ...style,
-              '--translate-x': `${transform?.x ?? 0}px`,
-              '--translate-y': `${transform?.y ?? 0}px`,
-            } as React.CSSProperties
-          }
+          {...props}
+          aria-label="Draggable"
+          data-cypress="draggable-item"
+          {...(handle ? {} : listeners)}
+          tabIndex={handle ? -1 : undefined}
+          ref={ref}
+          style={buttonStyle}
+
+          onClick={(e) => {
+            e.stopPropagation();
+            setFocusedElement(element);
+          }}
         >
-          <div
-            {...props}
-            aria-label="Draggable"
-            data-cypress="draggable-item"
-            {...(handle ? {} : listeners)}
-            tabIndex={handle ? -1 : undefined}
-            ref={ref}
-            style={buttonStyle}
 
-            onClick={(e) => {
-              e.stopPropagation();
-              setFocusedElement(element);
-            }}
-          >
-
-            <InnerLabel
-              // value={value}
-              // required={required}
-              // fontSize={fontSize}
-              value={value}
-              required={required}
-              fontSize={fontSize}
-            />
-            
-          </div>
+          <InnerLabel
+            // value={value}
+            // required={required}
+            // fontSize={fontSize}
+            value={value}
+            required={required}
+            fontSize={fontSize}
+          />
         </div>
       </div>
     );

@@ -35,7 +35,8 @@ export default function EditorContextProvider({children} : {children: ReactNode;
   const addElement = (index: number, element: FactoryElementInstance) => {
     setElements((prev) => {
       const newElements = [...prev];
-      newElements.splice(index, 0, element);
+      newElements.push(element);
+      // newElements.splice(index, 0, element);
       return newElements;
     });
 

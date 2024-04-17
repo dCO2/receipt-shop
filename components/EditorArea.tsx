@@ -7,6 +7,10 @@ import useEditor from './hooks/useEditor';
 import { ElementType, FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { idGenerator } from '@/lib/idGenerator';
 
+import styles from './EditorArea.module.css';
+import classNames from 'classnames';
+
+
 function EditorArea() {
   const { elements, addElement, focusedElement, setFocusedElement } = useEditor();
   const droppable = useDroppable({
@@ -100,7 +104,9 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
 
   return (
     <div
-      className="relative overscroll-none overscroll-x-contain"
+      className={classNames("relative overscroll-none overscroll-x-contain",
+        styles.EditorArea,
+      )}
       // "text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
       
       // onClick={(e) => {

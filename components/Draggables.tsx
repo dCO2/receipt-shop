@@ -171,7 +171,6 @@ function DraggableItem({
     });
 
   return (
-    <div>
     <Draggable
       ref={setNodeRef}
       dragging={isDragging}
@@ -192,7 +191,6 @@ function DraggableItem({
     >
       {children}
     </Draggable>
-    </div>
   );
 }
 

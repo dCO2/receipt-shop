@@ -2,8 +2,6 @@
   position: relative;
   width: 300vw;
   height: 300vh; 
-  border: red;
-  border-style: dashed;
   overflow: auto;
   box-sizing: content-box;
 }

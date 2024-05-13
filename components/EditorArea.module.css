@@ -1,8 +1,9 @@
-.EditorArea {
+/* .EditorArea {
   visibility: hidden;
-}
+} */
 
 /* i don't get why the style above has to be on EditorArea and the following has to be on EditorElementWrapper */
-.EditorElementWrapper > * { 
+
+/* .EditorElementWrapper > * { 
   visibility: visible;
-}
+} */

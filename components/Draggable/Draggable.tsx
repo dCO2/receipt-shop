@@ -72,7 +72,7 @@ export const Draggable = forwardRef<HTMLDivElement, Props>(
     return (
       // this root div has a style of static, i.e., isn't moved when the draggable is moved
       <div
-        className={classNames('border border-solid border-red-400',
+        className={classNames('',
           styles.Draggable,
           dragOverlay && styles.dragOverlay,
           dragging && styles.dragging,

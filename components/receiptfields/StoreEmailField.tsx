@@ -14,16 +14,23 @@ import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { RxLetterCaseToggle } from "react-icons/rx";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import Draggables from "../Draggables";
+import {
+  restrictToFirstScrollableAncestor,
+} from '@dnd-kit/modifiers';
+import { Coordinates } from "@dnd-kit/core/dist/types";
 
 const type: ElementType = "StoreEmailField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
+const draggableInitialPos: Coordinates = {x:0,y:0}
 
 const extraAttributes = {
   value: "type in email address",
   fontSize: FontSize[2],
   helperText: "This is the email address for the store. It will be displayed atop every factory and hence, receipt",
   required: true,
-  placeHolder: "Type in email for store..."
+  placeHolder: "Type in email for store...",
+  draggableInitialPos: draggableInitialPos
 }
 
 const propertiesSchema = z.object({
@@ -186,16 +193,42 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   );
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
-  const element = elementInstance as CustomInstance;
-  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+interface InnerLabelProps {
+  value: string;
+  required: boolean;
+  fontSize: string;
+}
+
+const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {value: string, required: boolean, fontSize: string}) => {
   return (
-    <div>
+    <div
+    >
       <Label>
-        <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
+        <span className={cn(FontSize[parseInt(fontSize)], "whitespace-nowrap")}>{value}</span>
         {required && "*"}
       </Label>
-      {helperText && <p className="text-sm italic">{helperText}</p>}
+    </div>
+  )
+}
+
+function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+  const element = elementInstance as CustomInstance;
+  return (
+    <div
+    >
+      <Draggables
+        modifiers={[restrictToFirstScrollableAncestor]}
+        key={3456}
+        id={3456}
+        pos={element.extraAttributes.draggableInitialPos}
+        content={"faaer"}
+        // value={value}
+        // required={required}
+        // fontSize={fontSize}
+        element={element}
+      >
+        {InnerLabel}
+      </Draggables>
     </div>
   );
 }

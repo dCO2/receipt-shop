@@ -16,13 +16,14 @@ import { toast } from "./ui/use-toast";
 import { FactoryPaletteElementsType, FactoryElements } from "./FactoryElements";
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
-  const {setElements, setElementsPalette} = useEditor();
+  const {setElements, setElementsPalette, setFocusedElement} = useEditor();
   let arrOfPalleteEle: FactoryPaletteElementsType = {}
 
   useEffect(() => {
     const elements = JSON.parse(factory.content);
     let allFelements = FactoryElements;
     let strOfElements = elements.map(obj => obj['type']).filter(Boolean)
+    setFocusedElement(null); // attempt: make editorareasidebar focus on no element when a new page is accessed
 
     for(let key of Object.keys(allFelements)){
       if(!(strOfElements.includes(String(key)))){

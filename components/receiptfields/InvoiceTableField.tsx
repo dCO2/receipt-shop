@@ -19,15 +19,24 @@ const type: ElementType = "InvoiceTableField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 
 const extraAttributes = {
-  value: "",
+  value: [{}],
   fontSize: FontSize[2],
   helperText: "user's purchases appear here",
   required: true,
   placeHolder: "insert table here"
 }
 
+const dictionarySchema = z.object({
+  name: z.string(),
+  price: z.number(),
+  quantity: z.number(),
+});
+
+const arrdictSchema = z.array(dictionarySchema);
+type arrdictSchemaType = z.infer<typeof arrdictSchema>;
+
 const propertiesSchema = z.object({
-  value: z.string().min(5).max(50),
+  value: arrdictSchema,
   fontSize: z.string(),
 });
 
@@ -72,7 +81,7 @@ function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}
   return (
     <div>
       <Label>
-        {value}
+        {value[0]['name']}
       </Label>
     </div>
   );
@@ -106,17 +115,32 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 
   ///
 
-  const [inputs, setInputs] = useState([{ value: [] }]);
+  const [inputs, setInputs] = useState<arrdictSchemaType>(element.extraAttributes.value);
   
   // Function to handle adding a new input field
   const handleAddInput = () => {
-    setInputs([...inputs, { value: [] }]);
+    setInputs([...inputs, { name: 'name', price: 0, quantity: 0, }]);
+  };
+  
+  const handleEnterInput = () => {
+    // setInputs([...inputs, { value: [] }]);
+    const attr = {
+      value: inputs,
+      FontSize: element.extraAttributes.fontSize,
+      helperText: element.extraAttributes.helperText,
+      required: element.extraAttributes.required,
+      placeHolder: element.extraAttributes.placeHolder,
+    };
+
+    // console.log(attr);
+
+    applyChanges(attr);
   };
 
   // Function to handle input change
-  const handleInputChange = (index: number, offset: number, event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (index: number, offset: string, event: ChangeEvent<HTMLInputElement>) => {
     const newInputs = [...inputs];
-    newInputs[index].value[offset] = event.target.value;
+    newInputs[index][offset] = event.target.value;
     setInputs(newInputs);
   };
 
@@ -135,23 +159,29 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
             <div className="flex flex-row" key={index}>
               <Input 
                 key={index}
-                value={input.value[0]}
-                onChange={(event) => handleInputChange(index, 0, event)}      
+                value={input['name']}
+                placeholder={element.extraAttributes.value[index]? element.extraAttributes.value[index]['name'] : ''}
+                onChange={(event) => handleInputChange(index, 'name', event)}      
               />
               <Input 
                 key={index+1}
-                value={input.value[1]}
-                onChange={(event) => handleInputChange(index, 1, event)}      
+                value={input['price']}
+                placeholder={element.extraAttributes.value[index] ? element.extraAttributes.value[index]['price'] : ''}
+                onChange={(event) => handleInputChange(index, 'price', event)}      
               />
               <Input 
                 key={index+2}
-                value={input.value[2]}
-                onChange={(event) => handleInputChange(index, 2, event)}      
+                value={input['quantity']}
+                placeholder={element.extraAttributes.value[index] ? element.extraAttributes.value[index]['quantity'] : ''}
+                onChange={(event) => handleInputChange(index, 'quantity', event)}      
               />
             </div>
           ))}
-          {/* Button to add new input field */}
-          <button onClick={handleAddInput}>Add Input</button>
+          <div className="flex flex-row justify-between">
+            {/* Button to add new input field */}
+            <button onClick={handleAddInput}>Add Product</button>
+            <button onClick={handleEnterInput}>Enter All</button>
+          </div>
         </div>
       </form>
     </Form>

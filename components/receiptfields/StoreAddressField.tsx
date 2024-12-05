@@ -226,7 +226,6 @@ const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {val
 
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
-  console.log(element)
   // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   // const { focusedElement, setFocusedElement } = useEditor();
   return (

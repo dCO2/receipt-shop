@@ -17,9 +17,10 @@ import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 
 const type: ElementType = "InvoiceTableField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
+// const iterableNull: Iterable<never> = [];
 
 const extraAttributes = {
-  value: [{}],
+  value: [],
   fontSize: FontSize[2],
   helperText: "user's purchases appear here",
   required: true,
@@ -119,7 +120,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   
   // Function to handle adding a new input field
   const handleAddInput = () => {
-    setInputs([...inputs, { name: 'name', price: 0, quantity: 0, }]);
+    setInputs([...inputs, { name: null, price: null, quantity: null, }]);
   };
   
   const handleEnterInput = () => {
@@ -132,9 +133,8 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
       placeHolder: element.extraAttributes.placeHolder,
     };
 
-    // console.log(attr);
-
     applyChanges(attr);
+    
   };
 
   // Function to handle input change
@@ -148,31 +148,31 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
     <div>
     <Form {...form}>
       <form
-        onBlur={form.handleSubmit(applyChanges)}
+        onBlur={handleEnterInput}
         onSubmit={(e) => {
           e.preventDefault();
         }}
         className="space-y-3"
       >
         <div>
-          {inputs.map((input, index) => (
+          {inputs?.map((input, index) => (
             <div className="flex flex-row" key={index}>
               <Input 
                 key={index}
                 value={input['name']}
-                placeholder={element.extraAttributes.value[index]? element.extraAttributes.value[index]['name'] : ''}
+                placeholder={'name'}
                 onChange={(event) => handleInputChange(index, 'name', event)}      
               />
               <Input 
                 key={index+1}
                 value={input['price']}
-                placeholder={element.extraAttributes.value[index] ? element.extraAttributes.value[index]['price'] : ''}
+                placeholder={'price'}
                 onChange={(event) => handleInputChange(index, 'price', event)}      
               />
               <Input 
                 key={index+2}
                 value={input['quantity']}
-                placeholder={element.extraAttributes.value[index] ? element.extraAttributes.value[index]['quantity'] : ''}
+                placeholder={'quantity'}
                 onChange={(event) => handleInputChange(index, 'quantity', event)}      
               />
             </div>

@@ -12,7 +12,7 @@ import classNames from 'classnames';
 
 
 function EditorArea() {
-  const { elements, addElement, focusedElement, setFocusedElement } = useEditor();
+  const { elements, addElement, focusedElement, setFocusedElement, editorRef } = useEditor();
   const droppable = useDroppable({
     id: "editor-drop-area",
     data: {
@@ -48,7 +48,13 @@ function EditorArea() {
         {/* the corresponding UI content in the EditorArea is displayed for each of the various states
         (such as when the droppable isOver, !isOver, etc.) */}
         <div 
-          ref={droppable.setNodeRef}
+          ref={(node) => {
+            // Combine droppable ref and editorRef
+            droppable.setNodeRef(node);
+            if (editorRef && 'current' in editorRef) {
+              (editorRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            }
+          }}
           className={cn(
             "relative max-w-[400px] min-h-[600px] bg-accent/40 rounded-md h-full flex flex-col flex-grow justify-start m-auto flex-1 overflow-y-auto",
             droppable.isOver && "ring-2 ring-primary/20")}
@@ -103,31 +109,8 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
   const EditorElement = FactoryElements[element.type].editorComponent;
 
   return (
-    <div
-      className={classNames("relative overscroll-none overscroll-x-contain",
-        styles.EditorArea,
-      )}
-      // "text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
-      
-      // onClick={(e) => {
-      //   e.stopPropagation();
-      //   setFocusedElement(element);
-      // }}
-    >
-    {/* <div 
-      className="relative h-fit flex flex-col text-foreground hover:cursor-pointer rounded-md ring-1 ring-accent ring-inset"
-      onClick={(e) => {
-        e.stopPropagation();
-        setFocusedElement(element);
-      }}
-    >
-      <div ref={topHalf.setNodeRef} className="absolute w-full h-1/2 rounded-t-md"/>
-      <div ref={bottomHalf.setNodeRef} className="absolute w-full bottom-0 h-1/2 rounded-b-md"/>
-      <div
-        className="flex w-full h-fit items-center rounded-md bg-accent/40 px-2 py-2 pointer-events-none">
-        <EditorElement elementInstance={element}/>  
-      </div>
-    </div> */}
+    <div className="contents">
+    {/* Using display:contents so wrapper doesn't take up space - draggable becomes the effective base element */}
     <EditorElement elementInstance={element}
     />  
     </div>

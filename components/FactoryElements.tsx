@@ -1,16 +1,14 @@
 import React from "react";
-import { TextFieldFactoryElement } from "./receiptfields/TextField";
 import { StoreNameFieldFactoryElement } from "./receiptfields/StoreNameField";
 import { StoreTelFieldFactoryElement } from "./receiptfields/StoreTelField";
 import { StoreAddressFieldFactoryElement } from "./receiptfields/StoreAddressField";
 import { StoreLogoFieldFactoryElement } from "./receiptfields/StoreLogo";
 import { StoreEmailFieldFactoryElement } from "./receiptfields/StoreEmailField";
-import { InventoryFieldFactoryElement } from "./receiptfields/InventoryField";
 import { InvoiceTableFieldFactoryElement } from "./receiptfields/InvoiceTableField";
 
-export type ElementType = "TextField" | "StoreNameField" | "StoreTelField" |
+export type ElementType = "StoreNameField" | "StoreTelField" |
                           "StoreAddressField" | "StoreLogoField" | "StoreEmailField" |
-                          "InventoryField" | "InvoiceTableField";
+                          "InvoiceTableField";
 
 export type printFunction = (key: string, value: string) => void;
 
@@ -55,12 +53,10 @@ export type FactoryPaletteElementsType = {} | {
 }
 
 export const FactoryElements: FactoryElementType = {
-  TextField: TextFieldFactoryElement,
   StoreNameField: StoreNameFieldFactoryElement,
   StoreTelField: StoreTelFieldFactoryElement,
   StoreAddressField: StoreAddressFieldFactoryElement,
   StoreLogoField: StoreLogoFieldFactoryElement,
   StoreEmailField: StoreEmailFieldFactoryElement,
-  InventoryField: InventoryFieldFactoryElement,
   InvoiceTableField: InvoiceTableFieldFactoryElement,
 };

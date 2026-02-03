@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, ReactNode, SetStateAction, createContext, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, createContext, useState, useRef, RefObject } from "react";
 import { FactoryElementInstance, FactoryElements, FactoryElementType, FactoryPaletteElementsType } from "../FactoryElements";
 
 // type for EditorArea's context data;
@@ -20,6 +20,9 @@ type EditorContextType = {
   setFocusedElement: Dispatch<SetStateAction<FactoryElementInstance | null>>;
 
   updateElement: (id: string, element: FactoryElementInstance) => void;
+
+  // ref to the editor canvas container for bounds calculation
+  editorRef: RefObject<HTMLDivElement> | null;
 }
 
 export const EditorContext = createContext<EditorContextType | null>(null);
@@ -30,6 +33,9 @@ export default function EditorContextProvider({children} : {children: ReactNode;
   const [elementsPalette, setElementsPalette] = useState<FactoryPaletteElementsType>(FactoryElements);
 
   const [focusedElement, setFocusedElement] = useState<FactoryElementInstance | null>(null);
+
+  // Ref to the editor canvas container for constraining draggable elements
+  const editorRef = useRef<HTMLDivElement>(null);
 
   // EditorArea's context actions
   const addElement = (index: number, element: FactoryElementInstance) => {
@@ -71,9 +77,8 @@ export default function EditorContextProvider({children} : {children: ReactNode;
         updateElement,
         setElements,
         setElementsPalette,
-        
-
         setFocusedElement,
+        editorRef,
       }}
     >
       {children}

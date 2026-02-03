@@ -334,7 +334,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
   const element = elementInstance as CustomInstance;
   const { value: inventory, required, fontSize, placeHolder, helperText, draggableInitialPos } = element.extraAttributes;
-  const { focusedElement, setFocusedElement, updateElement } = useEditor();
+  const { focusedElement, setFocusedElement, updateElement, editorRef } = useEditor();
 
   // Backward compatibility: handle old factories with posX/posY or undefined position
   const initialPos = draggableInitialPos || { x: 0, y: 0 };
@@ -424,13 +424,19 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
       let newX = e.clientX - dragStart.x;
       let newY = e.clientY - dragStart.y;
       
-      // Apply bounds (keep element within viewport)
+      // Apply bounds
       const elementWidth = 400; // Fixed width from style
       const elementHeight = 500; // Approximate height
       const minX = 0;
       const minY = 0;
-      const maxX = window.innerWidth - elementWidth;
+      let maxX = window.innerWidth - elementWidth;
       const maxY = window.innerHeight - elementHeight;
+
+      // Use editor bounds for X if available
+      if (editorRef?.current) {
+        const editorRect = editorRef.current.getBoundingClientRect();
+        maxX = editorRect.width - elementWidth;
+      }
       
       newX = Math.max(minX, Math.min(newX, maxX));
       newY = Math.max(minY, Math.min(newY, maxY));
@@ -457,7 +463,7 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragStart, currentPos, element, updateElement]);
+  }, [isDragging, dragStart, currentPos, element, updateElement, editorRef]);
 
   const style = {
     transform: `translate(${currentPos.x}px, ${currentPos.y}px)`,

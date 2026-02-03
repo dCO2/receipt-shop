@@ -50,7 +50,7 @@ function EditorArea() {
         <div 
           ref={droppable.setNodeRef}
           className={cn(
-            "max-w-[400px] min-h-[600px] bg-accent/40 rounded-md h-full flex flex-col flex-grow justify-start m-auto flex-1 overflow-y-auto",
+            "relative max-w-[400px] min-h-[600px] bg-accent/40 rounded-md h-full flex flex-col flex-grow justify-start m-auto flex-1 overflow-y-auto",
             droppable.isOver && "ring-2 ring-primary/20")}
         >
           {!droppable.isOver && (elements.length==0) &&

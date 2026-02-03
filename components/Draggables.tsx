@@ -50,7 +50,7 @@ interface Props {
   // required: boolean;
   // fontSize: string;
   // children: React.FC<InnerLabelProps>;
-
+  isDraggable?: boolean;
   element: FactoryElementInstance;
   children: React.FC<InnerLabelProps>;
 }
@@ -69,6 +69,7 @@ function Draggables({
   // value,
   // required,
   // fontSize,
+  isDraggable = true,
   element,
   children,
 }: Props) {
@@ -122,7 +123,8 @@ function Draggables({
         // value={value}
         // required={required}
         // fontSize={fontSize}
-        element={element}
+          isDraggable={true}
+          element={element}
           
         >
           {children}
@@ -145,6 +147,7 @@ interface DraggableItemProps {
   // value: string; 
   // required: boolean;
   // fontSize: string;
+  isDraggable?: boolean;
   element: FactoryElementInstance;
   children: React.FC<InnerLabelProps>;
 }
@@ -162,12 +165,14 @@ function DraggableItem({
   // value,
   // required,
   // fontSize,
+  isDraggable,
   element,
   children,
 }: DraggableItemProps) {
   const {attributes, isDragging, listeners, setNodeRef, transform} =
     useDraggable({
       id: 'draggable',
+      disabled: !isDraggable,
     });
 
   return (

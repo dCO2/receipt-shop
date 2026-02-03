@@ -11,17 +11,20 @@ import { useEffect } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
+import { Coordinates } from "@dnd-kit/core/dist/types";
 
 
 const type: ElementType = "StoreLogoField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
+const draggableInitialPos: Coordinates = {x:0,y:0};
 
 const extraAttributes = {
   value: "upload logo",
   fontSize: FontSize[2],
   helperText: "This is logo of the store. It will be displayed atop every factory and hence, receipt",
   required: true,
-  placeHolder: "Upload Logo..."
+  placeHolder: "Upload Logo...",
+  draggableInitialPos: draggableInitialPos
 }
 
 const propertiesSchema = z.object({
@@ -41,7 +44,7 @@ export const StoreLogoFieldFactoryElement: FactoryElements = {
     label: "StoreLogo Field"
   },
   editorComponent: EditorComponent,
-  factoryComponent: factoryComponent,
+  factoryComponent: FactoryComponent,
   propertiesComponent: PropertiesComponent,
 
   validate: (factoryElement: FactoryElementInstance, currentValue: string): boolean => {
@@ -60,17 +63,20 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
+function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
   {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string}){
   
   const element = elementInstance as CustomInstance;
+  const { value, fontSize, draggableInitialPos } = element.extraAttributes;
 
-  const { value } = element.extraAttributes;
+  const style = {
+    transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
+  };
 
   return (
-    <div>
+    <div style={style}>
       <Label>
-        {value}
+        <span className={cn(FontSize[parseInt(fontSize)], "whitespace-nowrap")}>{value}</span>
       </Label>
     </div>
   );

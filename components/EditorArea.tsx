@@ -24,7 +24,7 @@ function EditorArea() {
   // if the dragged item is what we need, then the necessary action is run
   useDndMonitor({
     onDragEnd: (event: DragEndEvent) => {
-      const { active, over } = event;
+      const { active, over, delta } = event;
       if(!active || !over) return;
 
       const isEditorBtnElement = active.data?.current?.isEditorBtnElement;
@@ -34,6 +34,20 @@ function EditorArea() {
         const newElement = FactoryElements[type as ElementType].construct(
           idGenerator()
         );
+        
+        // Set initial position based on where element was dropped
+        // Calculate drop position relative to editor area
+        if (editorRef?.current && newElement.extraAttributes) {
+          const editorRect = editorRef.current.getBoundingClientRect();
+          const dropX = Math.max(0, delta.x);
+          const dropY = Math.max(0, delta.y);
+          
+          newElement.extraAttributes.draggableInitialPos = {
+            x: dropX,
+            y: dropY,
+          };
+        }
+        
         addElement(0, newElement);
       }
     }

@@ -7,41 +7,20 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { useEffect, useState } from "react";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { RxLetterCaseToggle } from "react-icons/rx";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Coordinates } from "@dnd-kit/core/dist/types";
 import { RxTrash } from "react-icons/rx";
 import { Button } from "../ui/button";
-import { CheckIcon, ChevronsUpDownIcon, PlusIcon } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "../ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../ui/popover";
+import { useInvoiceTable, InventoryProduct, PurchasedItem } from "./shared/useInvoiceTable";
+import { InvoiceTableContent } from "./shared/InvoiceTableContent";
 
 const type: ElementType = "InvoiceTableField";
 const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 const draggableInitialPos: Coordinates = {x: 0, y: 0};
-
-// Define inventory product interface for clarity
-interface InventoryProduct {
-  name: string;
-  price: number;
-  quantity: number;
-}
 
 const extraAttributes = {
   value: [] as InventoryProduct[],
@@ -84,16 +63,17 @@ export const InvoiceTableFieldFactoryElement: FactoryElements = {
     label: "InvoiceTable Field"
   },
   editorComponent: EditorComponent,
-  factoryComponent: factoryComponent,
+  factoryComponent: FactoryComponent,
   propertiesComponent: PropertiesComponent,
 
   validate: (factoryElement: FactoryElementInstance, currentValue: string): boolean => {
-    const element = factoryElement as CustomInstance;
-    if (element.extraAttributes.required) {
-      return currentValue.length > 0;
+    // Validate that at least one product is selected with quantity > 0
+    try {
+      const items: PurchasedItem[] = JSON.parse(currentValue || "[]");
+      return items.some(item => item.productName && item.quantity > 0);
+    } catch {
+      return false;
     }
-
-    return true;
   },
 };
 
@@ -103,18 +83,60 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
+function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
   {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string}){
   
   const element = elementInstance as CustomInstance;
+  const { value: inventory, draggableInitialPos } = element.extraAttributes;
+  
+  const {
+    purchasedItems,
+    handleProductSelect,
+    handleQuantityChange,
+    handleAddRow,
+    handleDeleteRow,
+  } = useInvoiceTable({
+    inventory,
+    onChange: (items) => {
+      // Report value changes for printing
+      printValue?.(element.id, JSON.stringify(items));
+    },
+  });
 
-  const { value } = element.extraAttributes;
+  // Calculate total
+  const total = purchasedItems.reduce((sum, item) => sum + item.totalPrice, 0);
+
+  const style = {
+    transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
+    width: '400px',
+  };
 
   return (
-    <div>
-      <Label>
-        {value[0]['name']}
-      </Label>
+    <div
+      style={style}
+      className={cn(
+        "bg-background border rounded-lg p-3",
+        isInvalid && "border-destructive"
+      )}
+    >
+      <InvoiceTableContent
+        inventory={inventory}
+        purchasedItems={purchasedItems}
+        onProductSelect={handleProductSelect}
+        onQuantityChange={handleQuantityChange}
+        onAddRow={handleAddRow}
+        onDeleteRow={handleDeleteRow}
+      />
+      
+      {/* Total */}
+      <div className="mt-3 pt-3 border-t flex justify-between items-center">
+        <span className="font-medium">Total:</span>
+        <span className="font-bold text-lg">${total.toFixed(2)}</span>
+      </div>
+      
+      {isInvalid && (
+        <p className="text-xs text-destructive mt-2">Please select at least one product with quantity</p>
+      )}
     </div>
   );
 }
@@ -349,64 +371,14 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
     setCurrentPos(draggableInitialPos || { x: 0, y: 0 });
   }, [draggableInitialPos]);
 
-  // State for purchased items (what the user is buying)
-  const [purchasedItems, setPurchasedItems] = useState<Array<{
-    id: string; 
-    productName: string; 
-    quantity: number; 
-    totalPrice: number;
-    isAdded: boolean;
-  }>>([
-    { id: "1", productName: "", quantity: 0, totalPrice: 0, isAdded: false }
-  ]);
-
-  const handleProductSelect = (itemId: string, productName: string) => {
-    const product = inventory.find(p => p.name === productName);
-    if (!product) return;
-
-    setPurchasedItems(prev => prev.map(item => 
-      item.id === itemId 
-        ? { ...item, productName, totalPrice: Number(product.price) * item.quantity }
-        : item
-    ));
-  };
-
-  const handleQuantityChange = (itemId: string, quantity: number) => {
-    setPurchasedItems(prev => prev.map(item => {
-      if (item.id === itemId) {
-        const product = inventory.find(p => p.name === item.productName);
-        const price = product ? Number(product.price) : 0;
-        // Limit quantity to available inventory
-        const maxQuantity = product ? product.quantity : 0;
-        const validQuantity = Math.min(quantity, maxQuantity);
-        return { ...item, quantity: validQuantity, totalPrice: price * validQuantity };
-      }
-      return item;
-    }));
-  };
-
-  const handleAddRow = (itemId: string) => {
-    // Mark current row as added and create new row
-    setPurchasedItems(prev => [
-      ...prev.map(item => 
-        item.id === itemId ? { ...item, isAdded: true } : item
-      ),
-      {
-        id: Math.random().toString(),
-        productName: "",
-        quantity: 0,
-        totalPrice: 0,
-        isAdded: false
-      }
-    ]);
-  };
-
-  const handleDeleteRow = (itemId: string) => {
-    // Don't allow deleting if only one row remains
-    if (purchasedItems.length === 1) return;
-    
-    setPurchasedItems(prev => prev.filter(item => item.id !== itemId));
-  };
+  // Use shared hook for purchased items management
+  const {
+    purchasedItems,
+    handleProductSelect,
+    handleQuantityChange,
+    handleAddRow,
+    handleDeleteRow,
+  } = useInvoiceTable({ inventory });
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -496,147 +468,15 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
       <div className="p-3">
         {helperText && <p className="text-xs text-muted-foreground mb-2">{helperText}</p>}
         
-        {inventory.length === 0 ? (
-        <p className="text-sm text-muted-foreground italic">
-          Add products in properties first
-        </p>
-      ) : (
-        <div className="border rounded-md overflow-hidden">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-muted/50">
-                <th className="text-left p-2 font-medium">Product Name</th>
-                <th className="text-left p-2 w-24 font-medium">Quantity</th>
-                <th className="text-right p-2 font-medium">Total Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {purchasedItems.map((item) => (
-                <tr key={item.id} className="border-b last:border-0">
-                  <td className="p-2">
-                    <ProductCombobox
-                      inventory={inventory}
-                      value={item.productName}
-                      onSelect={(productName) => handleProductSelect(item.id, productName)}
-                    />
-                  </td>
-                  <td className="p-2">
-                    <Input
-                      type="number"
-                      min="0"
-                      max={inventory.find(p => p.name === item.productName)?.quantity || 0}
-                      value={item.quantity || ""}
-                      onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value) || 0)}
-                      onClick={(e) => e.stopPropagation()}
-                      className="h-9 text-sm"
-                      placeholder="0"
-                    />
-                  </td>
-                  <td className="p-2 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <span className="text-sm font-medium">
-                        ${item.totalPrice.toFixed(2)}
-                      </span>
-                      <div className="flex gap-1">
-                        {!item.isAdded && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleAddRow(item.id);
-                            }}
-                            className="h-7 w-7 p-0"
-                          >
-                            <PlusIcon className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
-                        {purchasedItems.length > 1 && (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteRow(item.id);
-                            }}
-                            className="h-7 w-7 p-0 hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <RxTrash className="h-3.5 w-3.5" />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        <InvoiceTableContent
+          inventory={inventory}
+          purchasedItems={purchasedItems}
+          onProductSelect={handleProductSelect}
+          onQuantityChange={handleQuantityChange}
+          onAddRow={handleAddRow}
+          onDeleteRow={handleDeleteRow}
+        />
       </div>
     </div>
-  );
-}
-
-// Combobox component for product selection
-function ProductCombobox({
-  inventory,
-  value,
-  onSelect,
-}: {
-  inventory: InventoryProduct[];
-  value: string;
-  onSelect: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          onClick={(e) => e.stopPropagation()}
-          className="w-full justify-between h-9 text-sm font-normal"
-        >
-          {value || "product..."}
-          <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput placeholder="Search product..." />
-          <CommandList>
-            <CommandEmpty>No product found.</CommandEmpty>
-            <CommandGroup>
-              {inventory.map((product) => (
-                <CommandItem
-                  key={product.name}
-                  value={product.name}
-                  onSelect={(currentValue) => {
-                    onSelect(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <CheckIcon
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === product.name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  <span>{product.name}</span>
-                  <span className="ml-auto text-muted-foreground text-xs">
-                    ${Number(product.price).toFixed(2)}
-                  </span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
   );
 }

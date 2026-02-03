@@ -50,7 +50,7 @@ export const StoreEmailFieldFactoryElement: FactoryElements = {
     label: "StoreEmail Field"
   },
   editorComponent: EditorComponent,
-  factoryComponent: factoryComponent,
+  factoryComponent: FactoryComponent,
   propertiesComponent: PropertiesComponent,
 
   validate: (factoryElement: FactoryElementInstance, currentValue: string): boolean => {
@@ -69,17 +69,20 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function factoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
+function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
   {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string}){
   
   const element = elementInstance as CustomInstance;
+  const { value, fontSize, draggableInitialPos } = element.extraAttributes;
 
-  const { value } = element.extraAttributes;
+  const style = {
+    transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
+  };
 
   return (
-    <div>
+    <div style={style}>
       <Label>
-        {value}
+        <span className={cn(FontSize[parseInt(fontSize)], "whitespace-nowrap")}>{value}</span>
       </Label>
     </div>
   );

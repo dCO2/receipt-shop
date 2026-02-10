@@ -62,7 +62,23 @@ export default function EditorContextProvider({children} : {children: ReactNode;
     });
   };
 
-  const removeElement = () => {};
+  const removeElement = (id: string) => {
+    setElements(prev => {
+      const element = prev.find(el => el.id === id);
+      if (element) {
+        // Restore the element type back to the palette with fresh defaults
+        setElementsPalette(prevPalette => ({
+          ...prevPalette,
+          [element.type]: FactoryElements[element.type],
+        }));
+        // Clear focused element if it was the one removed
+        setFocusedElement(prevFocused =>
+          prevFocused?.id === id ? null : prevFocused
+        );
+      }
+      return prev.filter(el => el.id !== id);
+    });
+  };
 
   const updateElement = (id: string, element: FactoryElementInstance) => {
     setElements(prev => {

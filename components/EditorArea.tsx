@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import useEditor from './hooks/useEditor';
 import { ElementType, FactoryElementInstance, FactoryElements } from './FactoryElements';
 import { idGenerator } from '@/lib/idGenerator';
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from './ui/context-menu';
 
 import styles from './EditorArea.module.css';
 import classNames from 'classnames';
@@ -101,7 +102,7 @@ function EditorArea() {
 }
 
 function EditorElementWrapper({element}: {element: FactoryElementInstance}){
-  const { focusedElement, setFocusedElement, validationErrors } = useEditor();
+  const { focusedElement, setFocusedElement, validationErrors, removeElement } = useEditor();
   const topHalf = useDroppable({
     id: element.id + "-top",
     data: {
@@ -123,12 +124,23 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
   const EditorElement = FactoryElements[element.type].editorComponent;
 
   return (
-    <div className="contents">
-    {/* Using display:contents so wrapper doesn't take up space - draggable becomes the effective base element */}
-    <EditorElement elementInstance={element}
-      isInvalid={validationErrors.has(element.id)}
-    />  
-    </div>
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div className="contents">
+          <EditorElement elementInstance={element}
+            isInvalid={validationErrors.has(element.id)}
+          />  
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem
+          className="text-destructive focus:text-destructive cursor-pointer"
+          onClick={() => removeElement(element.id)}
+        >
+          Remove
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 }
 

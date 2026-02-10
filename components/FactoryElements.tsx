@@ -32,6 +32,7 @@ export type FactoryElements = {
     isInvalid?: boolean;
     defaultValue?: string;
     printMode?: boolean;
+    clearError?: (key: string) => void;
   }>;
   propertiesComponent: React.FC<{
     elementInstance: FactoryElementInstance;

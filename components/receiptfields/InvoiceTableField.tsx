@@ -67,10 +67,10 @@ export const InvoiceTableFieldFactoryElement: FactoryElements = {
   propertiesComponent: PropertiesComponent,
 
   validate: (factoryElement: FactoryElementInstance, currentValue: string): boolean => {
-    // Validate that at least one product is selected with quantity > 0
+    // Validate that every product row has a selected product with quantity > 0
     try {
       const items: PurchasedItem[] = JSON.parse(currentValue || "[]");
-      return items.some(item => item.productName && item.quantity > 0);
+      return items.length > 0 && items.every(item => item.productName && item.quantity > 0);
     } catch {
       return false;
     }
@@ -83,8 +83,8 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue, printMode}:
-  {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string; printMode?: boolean}){
+function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue, printMode, clearError}:
+  {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string; printMode?: boolean; clearError?: (key: string) => void}){
   
   const element = elementInstance as CustomInstance;
   const { value: inventory, draggableInitialPos } = element.extraAttributes;
@@ -101,6 +101,8 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue,
     onChange: (items) => {
       // Report value changes for printing
       printValue?.(element.id, JSON.stringify(items));
+      // Clear validation error on user interaction
+      clearError?.(element.id);
     },
   });
 
@@ -137,7 +139,7 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue,
       </div>
       
       {isInvalid && (
-        <p className="text-xs text-destructive mt-2">Please select at least one product with quantity</p>
+        <p className="text-xs text-destructive mt-2">All product rows must have a selected product with quantity greater than zero</p>
       )}
     </div>
   );

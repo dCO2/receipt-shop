@@ -11,27 +11,39 @@ function FactoryPrint({factoryUrl, factoryContent, factoryName}:
 ){
 
   const factoryValues = useRef<{ [key: string]: string }>({}); // data that aggregates each value input into a receipt-factory
-  const factoryErrors = useRef<{ [key: string]: boolean }>({}); // data that aggregates the errors in each value input into a receipt-factory
-  const [renderKey, SetRenderKey] = useState(new Date().getTime()); // to trigger a rerender when validation fails. getTime to get random value
+  const [factoryErrors, setFactoryErrors] = useState<{ [key: string]: boolean }>({}); // reactive error state per field
   
   const [pending, startTransition] = useTransition();
   const receiptRef = useRef<HTMLDivElement>(null);
+
+  // Clears the error for a single field when the user interacts with it
+  const clearError = useCallback((key: string) => {
+    setFactoryErrors(prev => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  }, []);
 
   /*
     function to validate (before printing) all the values input into a receipt-factory.
     side-effect is; factory-elements with invalid input is saved to factoryErrors data.
   */
   const validateFactory: () => boolean = useCallback(() => {
+    const newErrors: { [key: string]: boolean } = {};
     for(const field of factoryContent){
       const inputValue = factoryValues.current[field.id] || "";
-      const valid = FactoryElements[field.type].validate(field, inputValue); // call validate fxn for each factory-element
+      const valid = FactoryElements[field.type].validate(field, inputValue);
       
       if (!valid) {
-        factoryErrors.current[field.id] = true; // invalid input is saved to factoryErrors data
+        newErrors[field.id] = true;
       }
     }
 
-    if (Object.keys(factoryErrors.current).length > 0) { // if factoryErrors data non-zero, return failed validation
+    setFactoryErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
       return false;
     }
 
@@ -46,11 +58,9 @@ function FactoryPrint({factoryUrl, factoryContent, factoryName}:
 
   /* process called when a factory is printed - captures receipt as PNG and downloads */
   const printFactory = async () => {
-    factoryErrors.current = {};
     const validFactory = validateFactory();
 
     if(!validFactory){
-      SetRenderKey(new Date().getTime());
       toast({
         title: "Error",
         description: "Please check the factory for errors",
@@ -101,7 +111,6 @@ function FactoryPrint({factoryUrl, factoryContent, factoryName}:
     <div className="flex flex-col justify-center w-full h-full items-center p-8">
       <div
         ref={receiptRef}
-        key={renderKey}
         className="w-[400px] min-h-[600px] bg-accent/40 rounded-md h-full flex flex-col flex-grow justify-start m-auto flex-1 overflow-y-auto"
       >
         {factoryContent.map((element) => {
@@ -111,8 +120,9 @@ function FactoryPrint({factoryUrl, factoryContent, factoryName}:
               key={element.id}
               elementInstance={element}
               printValue={printValue}
-              isInvalid={factoryErrors.current[element.id]}
+              isInvalid={factoryErrors[element.id]}
               defaultValue={factoryValues.current[element.id]}
+              clearError={clearError}
             />
           );
         })}

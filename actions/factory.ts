@@ -23,6 +23,7 @@ export async function GetAllFactoriesStat() {
   const stats = await prisma.receiptFactory.aggregate({
     where: {
       userId: user.id,
+      deletedAt: null,
     },
     _sum: {
       visits: true,
@@ -33,8 +34,8 @@ export async function GetAllFactoriesStat() {
   const visits = stats._sum.visits || 0;
   const prints = stats._sum.prints || 0;
 
-  let printRate = 0;
-  let bounceRate = 0;
+  const printRate = visits > 0 ? (prints / visits) * 100 : 0;
+  const bounceRate = visits > 0 ? ((visits - prints) / visits) * 100 : 0;
 
   return {
     visits, prints, printRate, bounceRate
@@ -78,6 +79,7 @@ export async function GetAllFactories(){
   return await prisma.receiptFactory.findMany({
     where: {
       userId: user.id,
+      deletedAt: null,
     },
     orderBy: {
       createdAt: "desc"
@@ -96,6 +98,7 @@ export async function GetFactoryById(id: number){
     where: {
       userId: user.id,
       id,
+      deletedAt: null,
     },
   });
 
@@ -112,6 +115,7 @@ export async function UpdateFactoryContent(id: number, jsonContent: string){
     where: {
       userId: user.id,
       id,
+      deletedAt: null,
     },
     data: {
       content: jsonContent
@@ -132,6 +136,7 @@ export async function PublishFactory(id: number) {
     where: {
       userId: user.id,
       id,
+      deletedAt: null,
     },
   });
 }
@@ -153,6 +158,7 @@ export async function GetFactoryContentByUrl(factoryUrl: string){
     },
     where: {
       shareURL: factoryUrl,
+      deletedAt: null,
     },
   });
 }
@@ -172,6 +178,7 @@ export async function PrintFactory(factoryUrl: string, content: string){
     where: {
       shareURL: factoryUrl,
       published: true,
+      deletedAt: null,
     },
   })
 }
@@ -186,9 +193,28 @@ export async function GetFactoryPrintedReceipts(id: number){
     where: {
       userId: user.id,
       id,
+      deletedAt: null,
     },
     include: {
       printedReceipts: true,
+    },
+  });
+}
+
+export async function DeleteFactory(id: number){
+  const user = await currentUser();
+  if (!user) {
+    throw new UserNotFoundErr();
+  }
+
+  return await prisma.receiptFactory.update({
+    where: {
+      userId: user.id,
+      id,
+      deletedAt: null,
+    },
+    data: {
+      deletedAt: new Date(),
     },
   });
 }

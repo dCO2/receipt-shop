@@ -1,7 +1,7 @@
 import { GetFactoryById, GetFactoryPrintedReceipts } from "@/actions/factory";
 import React, { ReactNode } from "react";
 import { StatsCard } from "../../page";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, PrinterIcon } from "@heroicons/react/24/outline";
 import VisitFactoryBtn from "@/components/VisitFactoryBtn";
 import FactoryLinkShare from "@/components/FactoryLinkShare";
 import { ElementType, FactoryElementInstance } from "@/components/FactoryElements";
@@ -24,8 +24,8 @@ async function FactoryDetailPage(
   }
 
   const { visits, prints } = factory;
-  let printRate = 0;
-  let bounceRate = 0;
+  const printRate = visits > 0 ? (prints / visits) * 100 : 0;
+  const bounceRate = visits > 0 ? ((visits - prints) / visits) * 100 : 0;
 
   return(
     <>
@@ -42,37 +42,37 @@ async function FactoryDetailPage(
         <StatsCard
           title="Total Visits"
           value={visits.toLocaleString() || ""}
-          icon={<EyeIcon className="h-7 w-7"/>}
+          icon={<EyeIcon className="h-4 w-4"/>}
           helperText="All time receipts factory visits"
           loading={false}
-          color=""
+          color="text-blue-400"
         />
         
         <StatsCard
           title="Total Prints"
           value={prints.toLocaleString() || ""}
-          icon={<EyeIcon className="h-7 w-7"/>}
+          icon={<PrinterIcon className="h-4 w-4"/>}
           helperText="All time receipt factory prints"
           loading={false}
-          color=""
+          color="text-green-400"
         />
 
         <StatsCard
           title="Print Rate"
-          value={printRate.toLocaleString() || ""}
-          icon={<EyeIcon className="h-7 w-7"/>}
+          value={printRate.toFixed(1) + "%"}
+          icon={<PrinterIcon className="h-4 w-4"/>}
           helperText="Visits that result in receipt prints"
           loading={false}
-          color=""
+          color="text-fuchsia-400"
         />
 
         <StatsCard
           title="Bounce Rate"
-          value={bounceRate.toLocaleString() || ""}
-          icon={<EyeIcon className="h-7 w-7"/>}
+          value={bounceRate.toFixed(1) + "%"}
+          icon={<EyeIcon className="h-4 w-4"/>}
           helperText="Visits without interaction"
           loading={false}
-          color=""
+          color="text-red-400"
         />
       </div>
 
@@ -86,6 +86,7 @@ async function FactoryDetailPage(
 export default FactoryDetailPage;
 
 type Row = { [key: string]: string } & {
+  printId: number;
   submittedAt: Date;
 };
 
@@ -116,6 +117,7 @@ async function PrintsList({id}:{id: number}){
     const content = JSON.parse(print.content);
     rows.push({
       ...content,
+      printId: print.id,
       submittedAt: print.createdAt,
     });
   });
@@ -127,6 +129,7 @@ async function PrintsList({id}:{id: number}){
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="uppercase">Print UID</TableHead>
               {columns.map((column) => (
                 <TableHead key={column.id} className="uppercase">
                   {column.label}
@@ -138,6 +141,7 @@ async function PrintsList({id}:{id: number}){
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={index}>
+                <TableCell className="font-mono">{row.printId}</TableCell>
                 {columns.map((column) => (
                   <RowCell key={column.id} type={column.type} value={row[column.id]} />
                 ))}

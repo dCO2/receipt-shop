@@ -106,14 +106,6 @@ async function PrintsList({id}:{id: number}){
 
   factoryElements.forEach((element) => {
     switch (element.type) {
-      case "TextField":
-        columns.push({
-          id: element.id,
-          label: element.extraAttributes?.label,
-          required: element.extraAttributes?.required,
-          type: element.type,
-        });
-        break;
       default:
         break;
     }

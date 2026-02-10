@@ -101,7 +101,7 @@ function EditorArea() {
 }
 
 function EditorElementWrapper({element}: {element: FactoryElementInstance}){
-  const { focusedElement, setFocusedElement } = useEditor();
+  const { focusedElement, setFocusedElement, validationErrors } = useEditor();
   const topHalf = useDroppable({
     id: element.id + "-top",
     data: {
@@ -126,6 +126,7 @@ function EditorElementWrapper({element}: {element: FactoryElementInstance}){
     <div className="contents">
     {/* Using display:contents so wrapper doesn't take up space - draggable becomes the effective base element */}
     <EditorElement elementInstance={element}
+      isInvalid={validationErrors.has(element.id)}
     />  
     </div>
   );

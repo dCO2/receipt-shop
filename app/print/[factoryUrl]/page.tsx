@@ -24,7 +24,13 @@ async function PrintPage({
 
   const factoryContent = JSON.parse(factory.content) as FactoryElementInstance[];
 
-  return <FactoryPrint factoryUrl={params.factoryUrl} factoryContent={factoryContent} />;
+  return (
+    <FactoryPrint
+      factoryUrl={params.factoryUrl}
+      factoryContent={factoryContent}
+      factoryName={factory.name}
+    />
+  );
 }
 
 export default PrintPage;

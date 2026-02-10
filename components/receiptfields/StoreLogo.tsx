@@ -143,7 +143,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   );
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+function EditorComponent({elementInstance, isInvalid}: {elementInstance: FactoryElementInstance; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
   const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   return (
@@ -153,6 +153,7 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
         {required && "*"}
       </Label>
       {helperText && <p className="text-sm italic">{helperText}</p>}
+      {isInvalid && <p className="text-xs text-destructive mt-1">This field is required</p>}
     </div>
   );
 }

@@ -31,12 +31,31 @@ interface UseInvoiceTableProps {
   inventory: InventoryProduct[];
   onChange?: (items: PurchasedItem[]) => void;
   initialItems?: PurchasedItem[];
+  defaultValue?: string;
 }
 
-export function useInvoiceTable({ inventory, onChange, initialItems }: UseInvoiceTableProps) {
-  const [purchasedItems, setPurchasedItems] = useState<PurchasedItem[]>(
-    initialItems || [createEmptyItem()]
-  );
+// Parse default value JSON string into PurchasedItem array
+const parseDefaultValue = (defaultValue?: string): PurchasedItem[] | null => {
+  if (!defaultValue) return null;
+  try {
+    const parsed = JSON.parse(defaultValue);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      return parsed as PurchasedItem[];
+    }
+  } catch {
+    // Invalid JSON, ignore
+  }
+  return null;
+};
+
+export function useInvoiceTable({ inventory, onChange, initialItems, defaultValue }: UseInvoiceTableProps) {
+  const [purchasedItems, setPurchasedItems] = useState<PurchasedItem[]>(() => {
+    // Priority: defaultValue > initialItems > empty item
+    const parsedDefault = parseDefaultValue(defaultValue);
+    if (parsedDefault) return parsedDefault;
+    if (initialItems) return initialItems;
+    return [createEmptyItem()];
+  });
 
   const handleProductSelect = useCallback((itemId: string, productName: string) => {
     const product = inventory.find(p => p.name === productName);

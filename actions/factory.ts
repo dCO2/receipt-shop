@@ -144,6 +144,7 @@ export async function GetFactoryContentByUrl(factoryUrl: string){
   return await prisma.receiptFactory.update({
     select: {
       content: true,
+      name: true,
     },
     data: {
       visits: {

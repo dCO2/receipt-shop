@@ -23,6 +23,10 @@ type EditorContextType = {
 
   // ref to the editor canvas container for bounds calculation
   editorRef: RefObject<HTMLDivElement> | null;
+
+  // set of element IDs that failed publish validation
+  validationErrors: Set<string>;
+  setValidationErrors: Dispatch<SetStateAction<Set<string>>>;
 }
 
 export const EditorContext = createContext<EditorContextType | null>(null);
@@ -33,6 +37,9 @@ export default function EditorContextProvider({children} : {children: ReactNode;
   const [elementsPalette, setElementsPalette] = useState<FactoryPaletteElementsType>(FactoryElements);
 
   const [focusedElement, setFocusedElement] = useState<FactoryElementInstance | null>(null);
+
+  // Element IDs that failed publish validation, auto-cleared by PublishFactoryBtn
+  const [validationErrors, setValidationErrors] = useState<Set<string>>(new Set());
 
   // Ref to the editor canvas container for constraining draggable elements
   const editorRef = useRef<HTMLDivElement>(null);
@@ -79,6 +86,8 @@ export default function EditorContextProvider({children} : {children: ReactNode;
         setElementsPalette,
         setFocusedElement,
         editorRef,
+        validationErrors,
+        setValidationErrors,
       }}
     >
       {children}

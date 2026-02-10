@@ -83,8 +83,8 @@ type CustomInstance = FactoryElementInstance & {
 
 type propertiesSchemaType = z.infer<typeof propertiesSchema>;
 
-function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}:
-  {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string}){
+function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue, printMode}:
+  {elementInstance: FactoryElementInstance; printValue?: printFunction; isInvalid?: boolean; defaultValue?: string; printMode?: boolean}){
   
   const element = elementInstance as CustomInstance;
   const { value: inventory, draggableInitialPos } = element.extraAttributes;
@@ -97,6 +97,7 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}
     handleDeleteRow,
   } = useInvoiceTable({
     inventory,
+    defaultValue,
     onChange: (items) => {
       // Report value changes for printing
       printValue?.(element.id, JSON.stringify(items));
@@ -126,6 +127,7 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}
         onQuantityChange={handleQuantityChange}
         onAddRow={handleAddRow}
         onDeleteRow={handleDeleteRow}
+        readOnly={printMode}
       />
       
       {/* Total */}
@@ -353,7 +355,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
   );
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+function EditorComponent({elementInstance, isInvalid}: {elementInstance: FactoryElementInstance; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
   const { value: inventory, required, fontSize, placeHolder, helperText, draggableInitialPos } = element.extraAttributes;
   const { focusedElement, setFocusedElement, updateElement, editorRef } = useEditor();
@@ -476,6 +478,7 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
           onAddRow={handleAddRow}
           onDeleteRow={handleDeleteRow}
         />
+        {isInvalid && <p className="text-xs text-destructive mt-2">Add at least one product to the inventory</p>}
       </div>
     </div>
   );

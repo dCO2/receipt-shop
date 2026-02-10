@@ -227,7 +227,7 @@ const InnerLabel: React.FC<InnerLabelProps> = ({value, required, fontSize}: {val
   )
 }
 
-function EditorComponent({elementInstance}: {elementInstance: FactoryElementInstance}){
+function EditorComponent({elementInstance, isInvalid}: {elementInstance: FactoryElementInstance; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
   // const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
   // const { focusedElement, setFocusedElement } = useEditor();
@@ -244,6 +244,7 @@ function EditorComponent({elementInstance}: {elementInstance: FactoryElementInst
       >
         {InnerLabel}
       </Draggables>
+      {isInvalid && <p className="text-xs text-destructive mt-1">This field is required</p>}
     </div>
   );
 }

@@ -3,11 +3,23 @@ import { FactoryElements } from './FactoryElements'
 import { Button } from './ui/button';
 import { useDraggable } from '@dnd-kit/core';
 
+function SidebarButtonContent({ factoryElement }: {
+  factoryElement: FactoryElements
+}) {
+  const {label, icon: Icon} = factoryElement.editorBtnElement;
+
+  return (
+    <div className="flex flex-row items-center">
+      <Icon/> &nbsp;
+      <p className="overflow-hidden whitespace-nowrap">{label}</p>
+    </div>
+  )
+}
+
 function SidebarBtnElement({ factoryElement }: {
   factoryElement: FactoryElements
 }){
 
-  const {label, icon: Icon} = factoryElement.editorBtnElement;
   const draggable = useDraggable({
     id: `editor-btn-${factoryElement.type}`,
     data: {
@@ -22,11 +34,9 @@ function SidebarBtnElement({ factoryElement }: {
       {...draggable.listeners}
       {...draggable.attributes}
       className="flex justify-start w-fit"
+      style={{ touchAction: 'none' }}
     >
-      <div className="flex flex-row items-center">
-        <Icon/> &nbsp;
-        <p className="overflow-hidden whitespace-nowrap">{label}</p>
-      </div>
+      <SidebarButtonContent factoryElement={factoryElement} />
     </Button>
   )
 }
@@ -34,13 +44,10 @@ function SidebarBtnElement({ factoryElement }: {
 export function SidebarBtnElementDragOverlay({ factoryElement }: {
   factoryElement: FactoryElements
 }){
-
-  const {label, icon: Icon} = factoryElement.editorBtnElement;
   
   return (
-    <Button>
-      <Icon/> &nbsp;
-      <span>{label}</span>
+    <Button className="flex justify-start w-fit cursor-grabbing">
+      <SidebarButtonContent factoryElement={factoryElement} />
     </Button>
   )
 }

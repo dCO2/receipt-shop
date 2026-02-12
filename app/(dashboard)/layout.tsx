@@ -7,7 +7,7 @@ import React, { ReactNode } from 'react';
 function Layout({children}: {children: ReactNode}) {
   return (
     <div>
-      <nav className="flex items-center justify-between p-4 border-b border-solid">
+      <nav className="flex items-center justify-between p-2 md:p-4 border-b border-solid">
         <div className="flex items-center justify-between gap-2">
           <MenuGuide/>
           <Logo/>
@@ -17,7 +17,7 @@ function Layout({children}: {children: ReactNode}) {
           <UserButton afterSignOutUrl="/sign-in" />
         </div>
       </nav>
-      <main className="">{children}</main>
+      <main className="px-2 md:px-4">{children}</main>
     </div>
   )
 }

@@ -151,9 +151,11 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           name="fontSize"
           render={({ field }) => (
             <Tabs
-              onValueChange={field.onChange}
-              // onValueChange={() => (form.handleSubmit(applyChanges))}
-              
+              onValueChange={(value) => {
+                field.onChange(value);
+                const currentValues = form.getValues();
+                applyChanges({ ...currentValues, fontSize: value });
+              }}
               defaultValue={field.value}
               className="flex flex-row space-y-1 list-image-none"
             >

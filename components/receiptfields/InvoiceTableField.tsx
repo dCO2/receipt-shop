@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { Coordinates } from "@dnd-kit/core/dist/types";
 import { RxTrash } from "react-icons/rx";
 import { Button } from "../ui/button";
@@ -19,12 +18,10 @@ import { useInvoiceTable, InventoryProduct, PurchasedItem } from "./shared/useIn
 import { InvoiceTableContent } from "./shared/InvoiceTableContent";
 
 const type: ElementType = "InvoiceTableField";
-const FontSize: {[key: number]: string} = {1: "text-xs", 2: "text-sm", 3: "text-base", 4: "text-lg"};
 const draggableInitialPos: Coordinates = {x: 0, y: 0};
 
 const extraAttributes = {
   value: [] as InventoryProduct[],
-  fontSize: FontSize[2],
   helperText: "user's purchases appear here",
   required: true,
   placeHolder: "insert table here",
@@ -41,7 +38,6 @@ const inventoryProductSchema = z.object({
 // Schema for complete properties including all extraAttributes
 const propertiesSchema = z.object({
   value: z.array(inventoryProductSchema),
-  fontSize: z.string(),
   helperText: z.string(),
   required: z.boolean(),
   placeHolder: z.string(),
@@ -154,7 +150,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
     mode: "onBlur",
     defaultValues: {
       value: element.extraAttributes.value,
-      fontSize: element.extraAttributes.fontSize,
       helperText: element.extraAttributes.helperText,
       required: element.extraAttributes.required,
       placeHolder: element.extraAttributes.placeHolder,
@@ -329,28 +324,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
               Add Product
             </Button>
           </div>
-
-          {/* Font Size Selector */}
-          <FormField
-            control={form.control}
-            name="fontSize"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Font Size</FormLabel>
-                <FormControl>
-                  <Tabs {...field} onValueChange={field.onChange}>
-                    <TabsList className="grid w-full grid-cols-4">
-                      {Object.entries(FontSize).map(([key, value]) => (
-                        <TabsTrigger key={key} value={value}>
-                          {key}
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
-                  </Tabs>
-                </FormControl>
-              </FormItem>
-            )}
-          />
         </form>
       </Form>
     </div>
@@ -359,7 +332,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 
 function EditorComponent({elementInstance, isInvalid}: {elementInstance: FactoryElementInstance; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
-  const { value: inventory, required, fontSize, placeHolder, helperText, draggableInitialPos } = element.extraAttributes;
+  const { value: inventory, required, placeHolder, helperText, draggableInitialPos } = element.extraAttributes;
   const { focusedElement, setFocusedElement, updateElement, editorRef } = useEditor();
 
   // Backward compatibility: handle old factories with posX/posY or undefined position

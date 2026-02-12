@@ -5,18 +5,25 @@ import PreviewFactoryBtn from "./PreviewFactoryBtn";
 import SaveFactoryBtn from "./SaveFactoryBtn";
 import PublishFactoryBtn from "./PublishFactoryBtn";
 import EditorArea from "./EditorArea";
-import { DndContext } from "@dnd-kit/core";
+import { CollisionDetection, DndContext, pointerWithin, rectIntersection } from "@dnd-kit/core";
 import DragOverlayWrapper from "./DragOverlayWrapper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useEditor from "./hooks/useEditor";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import Link from "next/link";
 import { toast } from "./ui/use-toast";
 import { FactoryPaletteElementsType, FactoryElements } from "./FactoryElements";
+import { Menu, ChevronRight } from "lucide-react";
+
+const collisionDetectionStrategy: CollisionDetection = (args) => {
+  const pointerCollisions = pointerWithin(args);
+  return pointerCollisions.length > 0 ? pointerCollisions : rectIntersection(args);
+};
 
 function EditFactory({factory}: {factory: ReceiptFactory}){
   const {setElements, setElementsPalette, setFocusedElement} = useEditor();
+  const [navMenuOpen, setNavMenuOpen] = useState(false);
   let arrOfPalleteEle: FactoryPaletteElementsType = {}
 
   useEffect(() => {
@@ -83,14 +90,15 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
   }
 
   return(
-    <DndContext>
-      <main className="m-4">
+    <DndContext collisionDetection={collisionDetectionStrategy}>
+      <main className="m-4 pb-24 md:pb-8">
         <nav className="mb-4">
-          <div className="flex items-center justify-between gap-2">
-            <h2 className="flex items-center">
-              <span>Factory:</span>&nbsp;<span className="font-bold">{factory.name}</span>
+          <div className="flex items-center justify-between gap-2 relative">
+            <h2 className="flex items-center text-sm md:text-base">
+              <span>Factory:</span>&nbsp;<span className="font-bold truncate max-w-[120px] md:max-w-none">{factory.name}</span>
             </h2>
-            <div className="flex items-center justify-between gap-2">
+            {/* Desktop nav buttons */}
+            <div className="hidden md:flex items-center gap-2">
               <PreviewFactoryBtn/>
               {!factory.published && (
                 <>
@@ -98,6 +106,30 @@ function EditFactory({factory}: {factory: ReceiptFactory}){
                   <PublishFactoryBtn id={factory.id}/>
                 </>
               )}
+            </div>
+            {/* Mobile nav menu - absolute positioned to overlay */}
+            <div className="flex md:hidden items-center absolute right-0 top-1/2 -translate-y-1/2">
+              <div 
+                className={`flex items-center gap-1 overflow-hidden transition-all duration-200 ease-out ${
+                  navMenuOpen ? 'max-w-[200px] opacity-100 mr-1' : 'max-w-0 opacity-0'
+                }`}
+              >
+                <PreviewFactoryBtn mobile/>
+                {!factory.published && (
+                  <>
+                    <SaveFactoryBtn id={factory.id} mobile/>
+                    <PublishFactoryBtn id={factory.id} mobile/>
+                  </>
+                )}
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setNavMenuOpen(!navMenuOpen)}
+                className="h-8 w-8"
+              >
+                {navMenuOpen ? <ChevronRight className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </Button>
             </div>
           </div>
         </nav>

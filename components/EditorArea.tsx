@@ -55,9 +55,9 @@ function EditorArea() {
   });
 
   return (
-    <div className="flex ">
+    <div className="flex flex-col md:flex-row">
       <div
-        className="w-full"
+        className="w-full flex justify-center md:justify-start"
         onClick={() => { if(focusedElement) setFocusedElement(null)}}
       >
         {/* the corresponding UI content in the EditorArea is displayed for each of the various states
@@ -75,7 +75,7 @@ function EditorArea() {
             droppable.isOver && "ring-2 ring-primary/20")}
         >
           {!droppable.isOver && (elements.length==0) &&
-            <p className="flex mx-auto flex-grow items-center">Drop Here. This is your receipt.</p>
+            <p className="flex mx-auto flex-grow items-center text-sm md:text-base text-muted-foreground">Drop Here. This is your receipt.</p>
           }
           {/* {droppable.isOver &&
             <div className="p-4 w-full">

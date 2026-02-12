@@ -6,10 +6,12 @@ import { useRouter } from 'next/navigation';
 import { toast } from './ui/use-toast';
 import useEditor from './hooks/useEditor';
 import { validateElementsForPublish } from './FactoryElements';
+import { Send } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const VALIDATION_ERROR_DISPLAY_MS = 4000;
 
-function PublishFactoryBtn({id}: {id: number}) {
+function PublishFactoryBtn({id, mobile}: {id: number; mobile?: boolean}) {
   const [ loading, startTransition ] = useTransition();
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -51,9 +53,12 @@ function PublishFactoryBtn({id}: {id: number}) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button className="gap-2">
-          <span>P</span>
-          <span className="hidden lg:visible">Publish</span>
+        <Button 
+          className={cn("gap-2", mobile && "h-8 w-8 p-0")}
+          size={mobile ? "icon" : "default"}
+        >
+          <Send className={cn(mobile ? "h-4 w-4" : "h-4 w-4 md:h-5 md:w-5")} />
+          {!mobile && <span className="hidden lg:inline">Publish</span>}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

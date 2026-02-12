@@ -8,7 +8,7 @@ function FactoryElementsSidebar() {
   
   return (
     <div className="flex flex-col gap-0 p-2">
-      <div>List of Elements</div>
+      <div className="text-sm md:text-base font-medium text-muted-foreground mb-1">Build your Receipt</div>
       <div className="flex flex-col gap-1">
         {Object.values(elementsPalette).map((value, index) => (
           <SidebarBtnElement key={index} factoryElement={value}/>

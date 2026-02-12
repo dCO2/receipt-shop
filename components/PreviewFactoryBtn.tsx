@@ -4,16 +4,21 @@ import { Dialog, DialogContent, DialogTrigger } from './ui/dialog';
 import { Button } from './ui/button';
 import { MdPreview } from 'react-icons/md';
 import { FactoryElements } from './FactoryElements';
+import { cn } from '@/lib/utils';
 
-function PreviewFactoryBtn() {
+function PreviewFactoryBtn({ mobile }: { mobile?: boolean }) {
   const {elements} = useEditor();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"outline"} className="gap-2">
-          <MdPreview className="h-6 w-6" />
-          <span className="hidden lg:visible">Preview</span>
+        <Button 
+          variant={"outline"} 
+          className={cn("gap-2", mobile && "h-8 w-8 p-0")}
+          size={mobile ? "icon" : "default"}
+        >
+          <MdPreview className={cn(mobile ? "h-4 w-4" : "h-5 w-5 md:h-6 md:w-6")} />
+          {!mobile && <span className="hidden lg:inline">Preview</span>}
         </Button>
       </DialogTrigger>
       <DialogContent className="w-screen h-screen max-h-screen max-w-full flex flex-col flex-grow p-0 gap-0">

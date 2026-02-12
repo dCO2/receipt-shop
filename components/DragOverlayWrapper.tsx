@@ -1,10 +1,22 @@
 import { Active, DragOverlay, useDndMonitor } from '@dnd-kit/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { snapCenterToCursor } from '@dnd-kit/modifiers';
 import { ElementType, FactoryElements } from './FactoryElements';
 import { SidebarBtnElementDragOverlay } from './SidebarBtnElement';
 
 export default function DragOverlayWrapper() {
   const [draggedItem, setDraggedItem] = useState<Active | null>(null);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const updateDesktopState = () => setIsDesktop(mediaQuery.matches);
+
+    updateDesktopState();
+    mediaQuery.addEventListener('change', updateDesktopState);
+
+    return () => mediaQuery.removeEventListener('change', updateDesktopState);
+  }, []);
 
   useDndMonitor({
     onDragStart: (event) => {
@@ -30,6 +42,8 @@ export default function DragOverlayWrapper() {
   }
 
   return (
-    <DragOverlay>{node}</DragOverlay>
+    <DragOverlay modifiers={isDesktop ? [snapCenterToCursor] : []} style={{ pointerEvents: 'none' }}>
+      {node}
+    </DragOverlay>
   )
 }

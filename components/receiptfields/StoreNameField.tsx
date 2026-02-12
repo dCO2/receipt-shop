@@ -8,10 +8,11 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
+import { RxLetterCaseToggle } from "react-icons/rx";
 import Draggables from "../Draggables";
 import {
   restrictToFirstScrollableAncestor,
@@ -127,7 +128,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           name="value"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Value</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -136,9 +136,6 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                This is name of the store. It will be displayed atop every factory and hence, receipt
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -148,50 +145,30 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
           control={form.control}
           name="fontSize"
           render={({ field }) => (
-            <FormItem className="space-y-3">
-              <FormLabel>Choose font size...</FormLabel>
-              <FormControl>
-                <RadioGroup
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  className="flex flex-row space-y-1"
-                >
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="1" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-xs
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="2" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-sm
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="3" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-base
-                    </FormLabel>
-                  </FormItem>
-                  <FormItem className="flex items-center space-x-3 space-y-0">
-                    <FormControl>
-                      <RadioGroupItem value="4" />
-                    </FormControl>
-                    <FormLabel className="font-normal">
-                      text-lg
-                    </FormLabel>
-                  </FormItem>
-                </RadioGroup>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <Tabs
+              onValueChange={(value) => {
+                field.onChange(value);
+                const currentValues = form.getValues();
+                applyChanges({ ...currentValues, fontSize: value });
+              }}
+              defaultValue={field.value}
+              className="flex flex-row space-y-1 list-image-none"
+            >
+              <TabsList>
+                <TabsTrigger value="1">
+                  <RxLetterCaseToggle className="w-3 h-3" />
+                </TabsTrigger>
+                <TabsTrigger value="2">
+                  <RxLetterCaseToggle className="w-4 h-4" />
+                </TabsTrigger>
+                <TabsTrigger value="3">
+                  <RxLetterCaseToggle className="w-5 h-5" />
+                </TabsTrigger>
+                <TabsTrigger value="4">
+                  <RxLetterCaseToggle className="w-6 h-6" />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           )}
         />
       </form>

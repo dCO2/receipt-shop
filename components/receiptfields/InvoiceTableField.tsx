@@ -7,7 +7,7 @@ import { Input } from "../ui/input";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import useEditor from "../hooks/useEditor";
 import { cn } from "@/lib/utils";
@@ -105,7 +105,8 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue,
   // Calculate total
   const total = purchasedItems.reduce((sum, item) => sum + item.totalPrice, 0);
 
-  const style = {
+  const style: React.CSSProperties = {
+    position: 'absolute',
     transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
     width: '400px',
   };
@@ -114,10 +115,11 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue,
     <div
       style={style}
       className={cn(
-        "bg-background border rounded-lg p-3",
-        isInvalid && "border-destructive"
+        "bg-background",
+        isInvalid && "ring-2 ring-destructive"
       )}
     >
+      <div>
       <InvoiceTableContent
         inventory={inventory}
         purchasedItems={purchasedItems}
@@ -137,6 +139,7 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue,
       {isInvalid && (
         <p className="text-xs text-destructive mt-2">All product rows must have a selected product with quantity greater than zero</p>
       )}
+      </div>
     </div>
   );
 }
@@ -190,6 +193,15 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
     append({ name: "", price: 0, quantity: 1 });
   };
 
+  // Remove product row and save
+  const handleRemoveProduct = (index: number) => {
+    remove(index);
+    // Schedule save after React processes the removal
+    setTimeout(() => {
+      saveCurrentValues();
+    }, 0);
+  };
+
   return(
     <div className="space-y-4">
       <Form {...form}>
@@ -220,7 +232,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
             )}
             
             {fields.length === 0 && (
-              <p className="text-sm text-muted-foreground italic">No products added yet. Click &quot;Add Product&quot; to start.</p>
+              <p className="text-xs text-muted-foreground italic text-center p-4">No products added yet. Click &quot;Add Product&quot; to start.</p>
             )}
             {fields.map((field, index) => (
               <div key={field.id} className="flex gap-2 items-start">
@@ -306,7 +318,7 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => remove(index)}
+                  onClick={() => handleRemoveProduct(index)}
                   className="h-10 w-10"
                 >
                   <RxTrash className="h-4 w-4" />
@@ -341,7 +353,9 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
   // Simple drag state
   const [isDragging, setIsDragging] = useState(false);
   const [currentPos, setCurrentPos] = useState(initialPos);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [dragStartMouse, setDragStartMouse] = useState({ x: 0, y: 0 });
+  const [dragStartPos, setDragStartPos] = useState({ x: 0, y: 0 });
+  const elementRef = useRef<HTMLDivElement>(null);
 
   // Update current position when element changes
   useEffect(() => {
@@ -360,8 +374,11 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     setIsDragging(true);
-    setDragStart({ x: e.clientX - currentPos.x, y: e.clientY - currentPos.y });
+    // Store absolute mouse position and element position at drag start
+    setDragStartMouse({ x: e.clientX, y: e.clientY });
+    setDragStartPos(currentPos);
     setFocusedElement(element);
   };
 
@@ -369,23 +386,26 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
     if (!isDragging) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Calculate new position
-      let newX = e.clientX - dragStart.x;
-      let newY = e.clientY - dragStart.y;
+      // Calculate delta from drag start
+      const deltaX = e.clientX - dragStartMouse.x;
+      const deltaY = e.clientY - dragStartMouse.y;
       
-      // Apply bounds
-      const elementWidth = 400; // Fixed width from style
-      const elementHeight = 500; // Approximate height
+      // New position = start position + delta
+      let newX = dragStartPos.x + deltaX;
+      let newY = dragStartPos.y + deltaY;
+      
+      // Get element dimensions
+      const elementWidth = elementRef.current?.offsetWidth || 400;
+      const elementHeight = elementRef.current?.offsetHeight || 200;
+      
+      // Apply bounds using editor area dimensions (400x600)
+      const editorWidth = 400;
+      const editorHeight = 600;
+      
       const minX = 0;
       const minY = 0;
-      let maxX = window.innerWidth - elementWidth;
-      const maxY = window.innerHeight - elementHeight;
-
-      // Use editor bounds for X if available
-      if (editorRef?.current) {
-        const editorRect = editorRef.current.getBoundingClientRect();
-        maxX = editorRect.width - elementWidth;
-      }
+      const maxX = Math.max(0, editorWidth - elementWidth);
+      const maxY = Math.max(0, editorHeight - elementHeight);
       
       newX = Math.max(minX, Math.min(newX, maxX));
       newY = Math.max(minY, Math.min(newY, maxY));
@@ -412,9 +432,10 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, dragStart, currentPos, element, updateElement, editorRef]);
+  }, [isDragging, dragStartMouse, dragStartPos, currentPos, element, updateElement]);
 
-  const style = {
+  const style: React.CSSProperties = {
+    position: 'absolute',
     transform: `translate(${currentPos.x}px, ${currentPos.y}px)`,
     width: '400px',
     zIndex: isDragging ? 1000 : 1,
@@ -422,15 +443,16 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
 
   return (
     <div
+      ref={elementRef}
       style={style}
       className="bg-background border-2 border-primary/20 rounded-lg"
     >
-      {/* Drag Handle */}
+      {/* Drag Handle - positioned above the content */}
       <div
         onMouseDown={handleMouseDown}
         onClick={(e) => e.stopPropagation()}
         onDoubleClick={(e) => e.stopPropagation()}
-        className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-t-lg cursor-grab active:cursor-grabbing hover:bg-muted transition-colors select-none touch-none"
+        className="absolute -top-9 left-0 right-0 flex items-center gap-2 px-3 py-2 bg-muted/50 border-2 border-b-0 border-primary/20 rounded-t-lg cursor-grab active:cursor-grabbing hover:bg-muted transition-colors select-none touch-none"
       >
         <div className="flex flex-col gap-0.5">
           <div className="w-4 h-0.5 bg-muted-foreground/50 rounded"></div>
@@ -442,9 +464,7 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
       </div>
 
       {/* Content Area */}
-      <div className="p-3">
-        {helperText && <p className="text-xs text-muted-foreground mb-2">{helperText}</p>}
-        
+      <div>
         <InvoiceTableContent
           inventory={inventory}
           purchasedItems={purchasedItems}
@@ -453,7 +473,14 @@ function EditorComponent({elementInstance, isInvalid}: {elementInstance: Factory
           onAddRow={handleAddRow}
           onDeleteRow={handleDeleteRow}
         />
-        {isInvalid && <p className="text-xs text-destructive mt-2">Add at least one product to the inventory</p>}
+        
+        {/* Total row preview */}
+        <div className="mt-3 pt-3 border-t flex justify-between items-center text-muted-foreground">
+          <span className="font-medium">Total:</span>
+          <span className="font-bold text-lg">$--</span>
+        </div>
+        
+        {isInvalid && <p className="text-xs text-destructive mt-2 px-3">Add at least one product to the inventory</p>}
       </div>
     </div>
   );

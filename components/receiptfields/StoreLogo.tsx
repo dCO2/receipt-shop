@@ -69,7 +69,8 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}
   const element = elementInstance as CustomInstance;
   const { value, fontSize, draggableInitialPos } = element.extraAttributes;
 
-  const style = {
+  const style: React.CSSProperties = {
+    position: 'absolute',
     transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
   };
 
@@ -145,9 +146,15 @@ function PropertiesComponent({elementInstance}: {elementInstance: FactoryElement
 
 function EditorComponent({elementInstance, isInvalid}: {elementInstance: FactoryElementInstance; isInvalid?: boolean}){
   const element = elementInstance as CustomInstance;
-  const { value, required, fontSize, placeHolder, helperText } = element.extraAttributes;
+  const { value, required, fontSize, placeHolder, helperText, draggableInitialPos } = element.extraAttributes;
+
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
+  };
+
   return (
-    <div>
+    <div style={style}>
       <Label>
         <span className={cn(FontSize[parseInt(fontSize)])}>{value}</span>
         {required && "*"}

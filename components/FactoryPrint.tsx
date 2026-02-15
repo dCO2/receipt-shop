@@ -111,7 +111,7 @@ function FactoryPrint({factoryUrl, factoryContent, factoryName}:
     <div className="flex flex-col justify-center w-full h-full items-center p-8">
       <div
         ref={receiptRef}
-        className="w-[400px] min-h-[600px] bg-accent/40 rounded-md h-full flex flex-col flex-grow justify-start m-auto flex-1 overflow-y-auto"
+        className="w-[400px] h-[600px] bg-accent/40 rounded-md relative overflow-hidden"
       >
         {factoryContent.map((element) => {
           const FactoryElement = FactoryElements[element.type].factoryComponent;

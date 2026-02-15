@@ -83,7 +83,8 @@ function FactoryComponent({elementInstance, printValue, isInvalid, defaultValue}
   const element = elementInstance as CustomInstance;
   const { value, fontSize, draggableInitialPos } = element.extraAttributes;
 
-  const style = {
+  const style: React.CSSProperties = {
+    position: 'absolute',
     transform: `translate(${draggableInitialPos?.x || 0}px, ${draggableInitialPos?.y || 0}px)`,
   };
 

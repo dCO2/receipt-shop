@@ -1,11 +1,11 @@
 .Wrapper {
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-  z-index: -1 !important;
-  visibility: hidden;
-  justify-content: flex-start;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  z-index: 0;
 
   &.center {
     justify-content: center;
@@ -13,6 +13,5 @@
 }
 
 .Wrapper > * {
-  /* Reset styles for children */
-  visibility: visible;
+  /* Reset styles for children - children use their own absolute positioning */
 }

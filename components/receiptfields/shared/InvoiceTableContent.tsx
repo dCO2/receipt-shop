@@ -42,7 +42,7 @@ export function InvoiceTableContent({
 }: InvoiceTableContentProps) {
   if (inventory.length === 0) {
     return (
-      <p className="text-sm text-muted-foreground italic">
+      <p className="text-xs text-muted-foreground italic text-center p-4">
         Add products in properties first
       </p>
     );

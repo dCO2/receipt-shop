@@ -26,8 +26,8 @@ function PreviewFactoryBtn({ mobile }: { mobile?: boolean }) {
           <p className="text-lg font-bold text-muted-foreground">Factory preview</p>
           <p className="text-sm text-muted-foreground">This is how your form will look like to your users.</p>
         </div>
-        <div className="bg-accent flex flex-col flex-grow items-center justify-center p-4 bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)] overflow-y-auto">
-          <div className="max-w-[620px] flex flex-col gap-4 flex-grow bg-background h-full w-full rounded-2xl p-8 overflow-y-auto">
+        <div className="bg-accent flex flex-col flex-grow items-center justify-center p-4 bg-[url(/paper.svg)] dark:bg-[url(/paper-dark.svg)]">
+          <div className="w-[400px] h-[600px] relative bg-background rounded-2xl overflow-hidden">
             {elements.map((element) => {
               const FactoryComponent = FactoryElements[element.type].factoryComponent;
 
